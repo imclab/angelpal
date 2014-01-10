@@ -1,0 +1,14 @@
+{
+  "name" : "angelpal_server",
+  "description": "RESTful Web Service for AngelPal Application",
+  "version": "0.0.1",
+  "scripts": { "test": "vows test/*.js" },
+  "private": true,
+  "dependencies": {
+  	"connect": "*",
+  	"mysql": "*",
+  	"colors": "*",
+    "vows": "*",
+    "api-easy": "*"
+  }
+}
