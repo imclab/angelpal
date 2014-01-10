@@ -1,0 +1,267 @@
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+@import 'sass-bootstrap/lib/bootstrap';
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+}
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+    margin: 40px 0;
+}
+
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .container {
+        max-width: 730px;
+    }
+
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+.snap-drawer {
+    width: 240px;
+    ul {
+        li {
+            span.glyphicon {
+                margin-right: 8px;
+            }
+        }
+    }
+}
+
+.navbar {
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    button {
+        margin-left: 10px;
+        float: left;
+    }
+}
+
+.snap-content {
+    background: #fff;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.panel {
+    border-radius: 0px;
+    .panel-heading { 
+        border-radius: 0px;
+        font-size: 1.2em;
+        padding: 5px;
+    }
+}
+
+.loadingLayout {
+    -webkit-transition: all 600ms cubic-bezier(0.000, 0.000, 0.580, 1.000); 
+    -moz-transition: all 600ms cubic-bezier(0.000, 0.000, 0.580, 1.000); 
+    -ms-transition: all 600ms cubic-bezier(0.000, 0.000, 0.580, 1.000); 
+    -o-transition: all 600ms cubic-bezier(0.000, 0.000, 0.580, 1.000); 
+    transition: all 600ms cubic-bezier(0.000, 0.000, 0.580, 1.000);
+    -webkit-animation: blink 0.8s alternate infinite;
+    -moz-animation: blink 0.8s alternate infinite;
+    text-align:center;
+    padding: 4px;
+}
+
+#contacts {
+    padding: 10px;
+    .input-group input {
+        font-size: 1.2em;
+    }
+    table {
+        margin-top: 20px;
+        tr {
+            cursor: pointer;
+            td {
+                vertical-align: middle;
+                img {
+                    max-height: 80px;
+                    max-width: 80px;
+                }
+            }
+        }
+    }
+}
+
+.container { padding-top: 70px; }
+
+.input-group-addon.glyphicon {
+    top: 0px;
+}
+
+#contactDetails {
+    padding: 20px;
+    .contactMainInfo {
+        display:inline-block;
+        text-align: center;
+        padding-top: 15px;
+        h3, h5 {
+            margin: 0px;
+        }
+    }
+    .contactImage {
+        height: 150px;
+        width: 150px;
+    }
+    .contactName {
+        font-size: 2.5em;
+    }
+    .contactBio {
+        text-align: justify;
+    }
+
+    .contactLink {
+        display: inline;
+        margin-right: 20px;
+    }
+
+}
+
+.loadingContactDetails .loadingLayout {
+    margin-top: 50px;
+}   
+
+.backButton {
+    position: relative;
+    top: -10px;
+    left: -10px;
+}
+
+.btn:focus { outline: none; }
+
+@media screen and (min-width: 768px) {
+    #contactDetails {
+        .contactImage {
+            float: left;
+        }
+        .contactBio {
+            margin-top: 25px;
+        }
+    }
+
+    .snap-drawer {
+        display: block!important;
+        z-index: 100;
+    }
+
+    .container {
+        margin-left:240px;
+        max-width: 510px!important;
+    }
+
+    .navbar {
+        -webkit-transform: translate3d(240px, 0, 0);
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .container {
+        max-width: 752px!important; 
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .container {
+        max-width: 960px!important; 
+    }
+}
+
+.snap-drawer {
+    position: fixed;
+    border-right: 1px solid #ddd;
+    .panel {
+        border: 0;
+        box-shadow: 0px 0px;
+    }
+}
+
+@-webkit-keyframes blink {
+    from { opacity: 1 }
+    to   { opacity: 0.4 }
+}
+@-moz-keyframes blink {
+    from { opacity: 1 }
+    to   { opacity: 0.4 }
+}
+
+.drawerOpened {
+    -webkit-transform: translate3d(240px, 0, 0);
+}

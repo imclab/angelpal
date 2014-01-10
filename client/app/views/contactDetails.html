@@ -1,0 +1,31 @@
+<backbutton/>
+        
+<div id="contactDetails" ng-controller="ContactDetailsCtrl" ng-show="contact">
+
+	<div class="row text-center">
+		<img class="img-circle img-thumbnail contactImage" alt="contact image" src="{{contact.image}}"/>
+		<div class="contactMainInfo">
+			<strong class="contactName">{{contact.name}}</strong>
+			<br>
+			<h3 ng-if="contact.roles.length > 0" class="contactRole">{{contact.roles[0].display_name}}</h3>
+			<br>
+			<h5 ng-if="contact.locations.length > 0" class="contactLocation">{{contact.locations[0].display_name}}</h5>
+		</div>
+    </div>
+    <hr/>
+	<div class="row">
+    	<div class="contactBio">{{contact.bio}}</div>
+    </div>
+    <hr/>
+    <div class="row text-center">
+    	<div ng-if="contact.blog_url" class="contactLink"><a href="{{contact.blog_url}}" target="_link">Blog</a></div>
+    	<div ng-if="contact.online_bio_url" class="contactLink"><a href="{{contact.online_bio_url}}" target="_link">Website</a></div>
+    	<div ng-if="contact.angellist_url" class="contactLink"><a href="{{contact.angellist_url}}" target="_link">AngelList Profile</a></div>
+	    <div ng-if="contact.twitter_url" class="contactLink"><a href="{{contact.twitter_url}}" target="_link">Twitter</a></div>
+    	<div ng-if="contact.facebook_url" class="contactLink"><a href="{{contact.facebook_url}}" target="_link">Facebook</a></div>
+    	<div ng-if="contact.linkedin_url" class="contactLink"><a href="{{contact.linkedin_url}}" target="_link">LinkedIn</a></div>
+    </div>
+
+</div>
+
+<loadinglayout class="loadingContactDetails" ng-show="!contact" label="'Loading contact info'"/>
