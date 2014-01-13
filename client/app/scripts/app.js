@@ -10,7 +10,10 @@ var myApp = angular.module('clientApp', [
   'CacheService'
 ]);
 
-myApp.config(function ($routeProvider) {
+myApp.config(function ($routeProvider, $locationProvider) {
+    // removes hash in urls
+    $locationProvider.html5Mode(true);
+
   $routeProvider
     .when('/', {
       templateUrl: 'views/login.html',
@@ -43,6 +46,7 @@ myApp.config(function ($routeProvider) {
     .otherwise({
       redirectTo: '/'
     });
+
 });
 
 // init drawer
@@ -77,7 +81,6 @@ myApp.run(function ($rootScope, $resource, snapRemote) {
 
 $(function() {
     FastClick.attach(document.body);
-    // $('.snap-drawer').removeClass('hide');
 });
 
 angular.module('CacheService', ['ng'])
@@ -95,3 +98,8 @@ myApp.factory('updateMenuUI', function () {
     }
   }
 });
+
+function login () {
+  window.location = "https://angel.co/api/oauth/authorize?client_id=2453f00f021a59cf21f247862645af45&response_type=code";
+}
+

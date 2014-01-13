@@ -185,7 +185,7 @@ body {
         font-size: 2.5em;
     }
     .contactBio {
-        text-align: justify;
+        text-align: center;
     }
 
     .contactLink {
@@ -210,16 +210,21 @@ body {
 @media screen and (min-width: 768px) {
     #contactDetails {
         .contactImage {
-            float: left;
+            vertical-align: top;
+            margin-right: 30px;
         }
         .contactBio {
-            margin-top: 25px;
         }
     }
 
     .snap-drawer {
+        margin-top: 50px;
         display: block!important;
         z-index: 100;
+    }
+
+    .snap-drawer.hideLogin {
+        display: none!important;
     }
 
     .container {
@@ -228,7 +233,11 @@ body {
     }
 
     .navbar {
-        -webkit-transform: translate3d(240px, 0, 0);
+        padding-left: 20px;
+    }
+
+    .navbar.drawerOpened {
+        -webkit-transform: translate3d(0px, 0, 0);
     }
 }
 
@@ -264,4 +273,10 @@ body {
 
 .drawerOpened {
     -webkit-transform: translate3d(240px, 0, 0);
+}
+
+.navbar {
+    button {
+        height: 34px;
+    }
 }

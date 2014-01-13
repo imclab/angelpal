@@ -5,7 +5,7 @@ var myApp = angular.module('clientApp');
 myApp.directive("contactlink", function () {
 	return function(scope, element, attrs, location) {
 		element.click(function () {
-			scope.changeView('/contacts/' + attrs.contactlink);
+			scope.changeView('contacts/' + attrs.contactlink);
 		});
 	}
 });

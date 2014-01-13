@@ -80,6 +80,16 @@ module.exports = function (grunt) {
           rewrite: {
               '^/api': '',
           }
+      },
+      {
+          context: '/loginproxy',
+          host: 'angel.co',
+          port: 443,
+          https: true,
+          changeOrigin: true,
+          rewrite: {
+              '^/loginproxy': '/api',
+          }
       }],
       livereload: {
         options: {
