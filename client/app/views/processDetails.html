@@ -1,0 +1,15 @@
+        
+<div id="processDetails" ng-controller="ContactDetailsCtrl" ng-show="true">
+
+    <div>
+        <backbutton />
+        <button type="button" class="btn btn-primary pull-right">Edit</button>
+    </div>
+
+    <div class="row text-center">
+        <strong class="processName">{{process.name}}</strong>
+    </div>
+    <hr/>
+</div>
+
+<loadinglayout class="loadingContactDetails" ng-show="!contact" label="'Loading process info'"/>

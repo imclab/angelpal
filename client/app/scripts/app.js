@@ -24,6 +24,10 @@ myApp.config(function ($routeProvider) {
       templateUrl: 'views/processes.html',
       controller: 'ProcessesCtrl'
     })
+    .when('/processes/:processId', {
+      templateUrl: 'views/processDetails.html',
+      controller: 'ProcessDetailsCtrl'
+    })
     .when('/documents', {
       templateUrl: 'views/documents.html',
       controller: 'DocumentsCtrl'
@@ -78,6 +82,7 @@ myApp.run(function ($rootScope, $resource, snapRemote) {
 $(function() {
     FastClick.attach(document.body);
     // $('.snap-drawer').removeClass('hide');
+
 });
 
 angular.module('CacheService', ['ng'])

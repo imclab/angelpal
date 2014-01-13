@@ -20,6 +20,8 @@
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/login.css">
     <!-- endbuild -->
+    <link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,700,400italic' rel='stylesheet' type='text/css'>
+
   </head>
   <body ng-app="clientApp">
     <!--[if lt IE 7]>
@@ -39,7 +41,7 @@
             <li><a href="#/documents"><span class="glyphicon glyphicon-folder-open"></span>Documents</a></li>
             <li><a href="#/contacts"><span class="glyphicon glyphicon-user"></span>Contacts</a></li>
             <hr/>
-            <li><a href="#/settings"><span class="glyphicon glyphicon-wrench"></span>Settings</a></li>
+            <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span>Settings</a></li>
             <li><a href="#/logout"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
           </ul>
         </div>
@@ -94,6 +96,7 @@
     <!-- endbower -->
     <!-- endbuild -->
 
+
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/login.js"></script>
@@ -103,6 +106,13 @@
         <script src="scripts/controllers/documents.js"></script>
         <script src="scripts/controllers/settings.js"></script>
         <script src="scripts/controllers/contactDetails.js"></script>
+        <script src="scripts/controllers/processDetails.js"></script>
+         <!-- GOOGLE DRIVE SDK : Load the utility library. -->
+        <script type="text/javascript" src="scripts/libs/google-drive.js"></script>
         <!-- endbuild -->
+
+        <!-- GOOGLE DRIVE SDK Load the libraries. -->
+        <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
+
 </body>
 </html>
