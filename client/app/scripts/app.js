@@ -27,6 +27,10 @@ myApp.config(function ($routeProvider, $locationProvider) {
       templateUrl: 'views/processes.html',
       controller: 'ProcessesCtrl'
     })
+    .when('/processes/:processId', {
+      templateUrl: 'views/processDetails.html',
+      controller: 'ProcessDetailsCtrl'
+    })
     .when('/documents', {
       templateUrl: 'views/documents.html',
       controller: 'DocumentsCtrl'

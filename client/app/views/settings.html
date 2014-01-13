@@ -1,1 +1,59 @@
-settings
+<div id="settings">
+
+	<a href="" data-toggle="collapse" data-target="#account">Account Management</a>
+	<div id="account" class="collapse">
+		<br>
+		<button id="deleteAccountButton" type="button" class="btn btn-danger" >Delete account</button>
+		<br class="visible-xs">
+		<i><small>This action will remove all your data from our server.</small></i>
+	</div>
+	<hr/>
+
+	<a href="" data-toggle="collapse" data-target="#legals">Legals</a>
+	<div id="legals" class="collapse">
+		<h3>Here will be displayed the legals about the app.</h3>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		</p>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		</p>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		</p>
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		</p>
+	</div>
+	<hr/>
+
+	<a href="" data-toggle="collapse" data-target="#credits">Credits</a>
+	<div id="credits" class="collapse">
+		<br>
+		<p><strong>Alexandre Kantjas</strong> : <small>Pipoteur</small></p>
+		<p><strong>Guillaume Gouchon</strong> : <small>Bidouilleur</small></p>
+	</div>
+	<hr/>
+
+	<a href="mailto:team@angelpal.com">Contact</a>
+	<hr/>
+
+	<a><small>App Version : 0.1.0</small></a>
+
+</div>
+
+
+<!-- DELETE ACCOUNT CONFIRMATION POPUP -->
+<div id="deleteAccountModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        Are you sure you want to delete your AngelPal account ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+        <button id="deleteAccountConfirm" type="button" class="btn btn-danger">Delete account</button>
+      </div>
+    </div>
+  </div>
+</div>
