@@ -2,6 +2,6 @@
 
 var myApp =angular.module('clientApp');
 
-myApp.controller('FeedsCtrl', function ($scope, SideMenu) {
+myApp.controller('FeedsCtrl', function ($scope, SideMenu, $rootScope) {
 	SideMenu.updateActive(2);
 });

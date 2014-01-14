@@ -19,6 +19,7 @@ module.exports = function (grunt) {
     return connect.static(require('path').resolve(dir));
   };
   var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+  var modRewrite = require('connect-modrewrite');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -80,17 +81,18 @@ module.exports = function (grunt) {
           rewrite: {
               '^/api': '',
           }
-      },
-      {
-          context: '/loginproxy',
-          host: 'angel.co',
-          port: 443,
-          https: true,
-          changeOrigin: true,
-          rewrite: {
-              '^/loginproxy': '/api',
-          }
-      }],
+      }
+      // {
+      //     context: '/loginproxy',
+      //     host: '0.0.0.0',
+      //     port: 3000,
+      //     https: false,
+      //     changeOrigin: true,
+      //     rewrite: {
+      //         '^/loginproxy': '',
+      //     }
+      // }
+      ],
       livereload: {
         options: {
           open: true,
@@ -100,6 +102,9 @@ module.exports = function (grunt) {
           ],
           middleware: function (connect) {
             return [
+              modRewrite([
+                '!\\.\\w+$ /'
+              ]),
               proxySnippet,
               mountFolder(connect, '.tmp'),
               mountFolder(connect, 'app')

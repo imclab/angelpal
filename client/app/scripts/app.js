@@ -12,38 +12,48 @@ var myApp = angular.module('clientApp', [
 
 myApp.config(function ($routeProvider, $locationProvider) {
 
+  $locationProvider.html5Mode(true);
+
   $routeProvider
     .when('/', {
       templateUrl: 'views/login.html',
-      controller: 'LoginCtrl'
+      controller: 'LoginCtrl',
+      isPublic: true
     })
     .when('/feeds', {
       templateUrl: 'views/feeds.html',
-      controller: 'FeedsCtrl'
+      controller: 'FeedsCtrl',
+      isPublic: false
     })
     .when('/processes', {
       templateUrl: 'views/processes.html',
-      controller: 'ProcessesCtrl'
+      controller: 'ProcessesCtrl',
+      isPublic: false
     })
     .when('/processes/:processId', {
       templateUrl: 'views/processDetails.html',
-      controller: 'ProcessDetailsCtrl'
+      controller: 'ProcessDetailsCtrl',
+      isPublic: false
     })
-    .when('/documents', {
-      templateUrl: 'views/documents.html',
-      controller: 'DocumentsCtrl'
+    .when('/organizations', {
+      templateUrl: 'views/organizations.html',
+      controller: 'OrganizationsCtrl',
+      isPublic: false
     })
     .when('/contacts', {
       templateUrl: 'views/contacts.html',
-      controller: 'ContactsCtrl'
+      controller: 'ContactsCtrl',
+      isPublic: false
     })
     .when('/contacts/:contactId', {
       templateUrl: 'views/contactDetails.html',
-      controller: 'ContactDetailsCtrl'
+      controller: 'ContactDetailsCtrl',
+      isPublic: false
     })
     .when('/settings', {
       templateUrl: 'views/settings.html',
-      controller: 'SettingsCtrl'
+      controller: 'SettingsCtrl',
+      isPublic: true
     })
     .otherwise({
       redirectTo: '/'
@@ -95,14 +105,20 @@ myApp.factory('SideMenu', function () {
     showMenuLogout: function () {
       $('li', '.nav').addClass('hide');
       $('hr', '.nav').addClass('hide');
+      $('.glyphicon', '#settingsMenu').toggleClass('glyphicon-cog glyphicon-info-sign');
+      $('.menuLabel', '#settingsMenu').html('About');
       $('li:nth-child(1)', '.nav').removeClass('hide');
       $('li:nth-child(7)', '.nav').removeClass('hide');
+      $('#loginButton').removeClass('hide');
       this.updateActive(1);
     },
     showMenuLogin: function () {
       $('li', '.nav').removeClass('hide');
       $('hr', '.nav').removeClass('hide');
-      $('li:nth-child(1)', '.nav').addClass('hide');  
+      $('.glyphicon', '#settingsMenu').toggleClass('glyphicon-cog glyphicon-info-sign');
+      $('.menuLabel', '#settingsMenu').html('Settings');
+      $('li:nth-child(1)', '.nav').addClass('hide');
+      $('#loginButton').addClass('hide');
       this.updateActive(2);
     },
     updateActive: function (index) { 
@@ -111,6 +127,22 @@ myApp.factory('SideMenu', function () {
     }
   }
 });
+
+myApp.run(function ($rootScope, $location, SideMenu) {
+    $rootScope.$on('$routeChangeStart', function (event, next) {
+        var userAuthenticated = !($rootScope.access_token == undefined); /* Check if the user is logged in */
+        if (!userAuthenticated) {
+          SideMenu.showMenuLogout();
+        } else {
+            SideMenu.showMenuLogin();
+        }
+        if (!userAuthenticated && !next.isPublic) {
+            /* You can save the user's location to take him back to the same page after he has logged-in */
+            $rootScope.savedLocation = $location.url();
+            $location.path('/');
+        }
+    });
+  });
 
 function login () {
   window.location = "https://angel.co/api/oauth/authorize?client_id=2453f00f021a59cf21f247862645af45&response_type=code";

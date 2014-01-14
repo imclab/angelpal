@@ -16,6 +16,21 @@ colors.setTheme({
   debug: 'grey'
 });
 
+// Enables CORS
+var enableCORS = function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+ 
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.end();
+    }
+    else {
+      next();
+    }
+};
+
 var app = connect()
     .use(function (req, res, next) {
         next();
@@ -24,14 +39,13 @@ var app = connect()
     .use(connect.cookieParser())
     .use(function (err, req, res, next) {
         if (err === null) { next(); }
-        res.writeHead(400);
         res.end('Invalid JSON:' + err.message);
     })
+    .use(enableCORS)
+    .use(router.match('POST',   '/login',                       user.login)) // login / create account
     .use(auth.validate())
     .use(router.match('GET',    '/users/([0-9a-f])',            user.get)) // get my user info
     .use(router.match('GET',    '/users/([0-9a-f])/disasters',  disaster.getAll)) // get my disasters
-    .use(router.match('POST',   '/users',                       user.signup)) // create account
-    .use(router.match('POST',   '/users/signin',                user.signin)) // login
     .use(router.match('POST',   '/disasters',                   disaster.create)) // create disaster
     .use(router.match('POST',   '/disasters/([0-9a-f])',        disaster.update)) // update disaster
     .use(router.match('DELETE', '/disasters/([0-9a-f])',        disaster.remove)) // delete disaster

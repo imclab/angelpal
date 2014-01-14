@@ -1,6 +1,6 @@
 <div id="settings">
 
-	<div ng-show="$rootScope.isLoggedIn">
+	<div ng-show="$rootScope.access_token != undefined">
 		<a href="" data-toggle="collapse" data-target="#account">Account Management</a>
 		<div id="account" class="collapse">
 			<br>
@@ -26,13 +26,15 @@
 	</div>
 	<hr/>
 
-	<a href="" data-toggle="collapse" data-target="#credits">Credits</a>
-	<div id="credits" class="collapse">
-		<br>
-		<p><strong>Alexandre Kantjas</strong> : <small>Pipoteur</small></p>
-		<p><strong>Guillaume Gouchon</strong> : <small>Bidouilleur</small></p>
+	<div class="hide">
+		<a href="" data-toggle="collapse" data-target="#credits">Credits</a>
+		<div id="credits" class="collapse">
+			<br>
+			<p><strong>Alexandre Kantjas</strong></p>
+			<p><strong>Guillaume Gouchon</strong></p>
+		</div>
+		<hr/>
 	</div>
-	<hr/>
 
 	<a href="mailto:team@angelpal.com">Contact</a>
 	<hr/>

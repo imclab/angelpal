@@ -2,7 +2,7 @@
 
 angular.module('clientApp')
   .controller('SettingsCtrl', function ($scope, SideMenu) {
-  SideMenu.updateActive(7);
+    SideMenu.updateActive(7);
 
   	$('#deleteAccountButton').click(function () {
   		$('#deleteAccountModal').appendTo("body").modal('show');

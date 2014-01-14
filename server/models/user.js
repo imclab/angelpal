@@ -1,5 +1,6 @@
 "use strict";
 var util = require('util'),
+    request = require('request'),
     Auth = require('../lib/auth').Auth,
     db = require('../lib/db-mysql');
 
@@ -31,43 +32,73 @@ module.exports.get = function (req, res, id) {
     });
 };
 
-// ### Create a user
-module.exports.signup = function (req, res) {
-    var user = req.body,
-        auth = new Auth();
-    if (user === undefined) {
+// ### Login / create AngelPal account if needed
+module.exports.login = function (req, res) {
+    var requestParams = req.body;
+    if (requestParams === undefined || !requestParams.code) {
         res.writeHead(400);
         res.end('Missing field');
         return; 
-    } else if (req.oauth) {
-        user.login = req.oauth.user;
-    } else if (!user.hasOwnProperty('login') || !user.hasOwnProperty('password')) {
-        res.writeHead(400);
-        res.end('Missing field');
-        return;
     }
 
-    auth.signup(user.login, user.password, function (err, newUser) {
-        if (err) { throw err; }
-        db.assertDoesNotExist('users', { login: newUser.login }, function (err) {
-            if (err) {
-                if (err.message.match(/Existing user/)) {
-                    res.writeHead(409);
-                    res.end(err.message);
-                    return;
-                } else {
-                    throw err;
-                }
-            }
-            newUser.modtime = (new Date()).getTime();
-            db.create('users', newUser, function (err, resources) {
-                if (err) { throw err; }
-                var userId = resources[0]._id.toString();
-                res.writeHead(200);
-                res.end(userId);
-            });
-        });
+    // login with Angellist API
+    var url = "https://angel.co/api/oauth/token?client_id=2453f00f021a59cf21f247862645af45&client_secret=e72b18b0210117916f987655212f5e5f&code=" 
+                + requestParams.code + "&grant_type=authorization_code";
+    request({
+        uri: url,
+        method: "POST",
+        timeout: 10000
+    }, function (error, response, body) {
+        // send access token to client
+        res.writeHead(200);
+        res.end(body);
     });
+
+
+
+
+    // db.get('users', { 'login': user.login }, function (err, doc) {
+    //     if (err) { throw err; }
+    //     if (doc && doc.length > 0) {
+    //         auth.signin(doc[0], user.password, function (err, token) {
+    //             if (err) {
+    //                 res.writeHead(401);
+    //                 res.end(err.toString());
+    //             }
+    //             res.writeHead(200, [
+    //                 ['Set-Cookie', 'auth=' + token + '; max-age:' + '3600']
+    //             ]);
+    //             res.end(doc[0].id.toString());
+    //         });
+    //     } else {
+    //         res.writeHead(404);
+    //         res.end('user ' + user.login + ' not found');
+    //     }
+    // });
+
+
+
+    // auth.signup(user.login, user.password, function (err, newUser) {
+    //     if (err) { throw err; }
+    //     db.assertDoesNotExist('users', { login: newUser.login }, function (err) {
+    //         if (err) {
+    //             if (err.message.match(/Existing user/)) {
+    //                 res.writeHead(409);
+    //                 res.end(err.message);
+    //                 return;
+    //             } else {
+    //                 throw err;
+    //             }
+    //         }
+    //         newUser.modtime = (new Date()).getTime();
+    //         db.create('users', newUser, function (err, resources) {
+    //             if (err) { throw err; }
+    //             var userId = resources[0]._id.toString();
+    //             res.writeHead(200);
+    //             res.end(userId);
+    //         });
+    //     });
+    // });
 
 };
 
