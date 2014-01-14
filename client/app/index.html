@@ -6,9 +6,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <title>AngelPal</title>
+
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
@@ -18,7 +21,13 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="styles/contacts.css">
+    <link rel="stylesheet" href="styles/processes.css">
+    <link rel="stylesheet" href="styles/documents.css">
+    <link rel="stylesheet" href="styles/feeds.css">
+    <link rel="stylesheet" href="styles/settings.css">
     <!-- endbuild -->
     <link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,700,400italic' rel='stylesheet' type='text/css'>
 
@@ -36,13 +45,18 @@
         </div>
         <div class="panel-body">
            <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a href="feeds"><span class="glyphicon glyphicon-comment"></span>Feeds</a></li>
-            <li><a href="processes"><span class="glyphicon glyphicon-tasks"></span>Processes</a></li>
-            <li><a href="documents"><span class="glyphicon glyphicon-folder-open"></span>Documents</a></li>
-            <li><a href="contacts"><span class="glyphicon glyphicon-user"></span>Contacts</a></li>
+            <li class="hide">
+              <a href="#/login"><span class="glyphicon glyphicon-home"></span>Home</a>
+            </li>
+            <li class="active">
+              <a href="#/feeds"><span class="glyphicon glyphicon-comment"></span>Feeds</a>
+            </li>
+            <li><a href="#/processes"><span class="glyphicon glyphicon-tasks"></span>Processes</a></li>
+            <li><a href="#/documents"><span class="glyphicon glyphicon-folder-open"></span>Documents</a></li>
+            <li><a href="#/contacts"><span class="glyphicon glyphicon-user"></span>Contacts</a></li>
             <hr/>
-            <li><a href="settings"><span class="glyphicon glyphicon-wrench"></span>Settings</a></li>
-            <li><a href="/?logout=true"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
+            <li><a href="#/settings"><span class="glyphicon glyphicon-wrench"></span>Settings</a></li>
+            <li><a href="#/?logout=true"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
           </ul>
         </div>
       </div>
@@ -50,11 +64,20 @@
 
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="navbar-inner">
-        <button type="button" class="btn btn-default navbar-btn navbar-left visible-xs" snap-toggle="left"><span class="glyphicon glyphicon-align-justify"></span></button>
+        <button id="menuButton" type="button" class="btn btn-default navbar-btn navbar-left visible-xs" snap-toggle="left">
+          <span class="glyphicon glyphicon-align-justify"></span>
+        </button>
         <div class="navbar-brand">AngelPal</div>
-        <div class="navbar-form navbar-right" >
-          <button type="button" class="btn btn-primary" onclick="login()"><img src="images/angellist.png" alt="Logo Angellist"/> Login with Angellist</button>
-        </div>
+        <button id="loginToggle" type="button" class="btn btn-default navbar-btn visible-xs">Log In</button>
+        <form id="loginForm" class="navbar-form navbar-right hidden-xs" role="form">
+          <div class="form-group">
+            <input type="email" placeholder="Email..." class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="password" placeholder="Password..." class="form-control">
+          </div>
+          <button type="button" class="btn btn-success" onclick="login()">Sign in</button>
+        </form>
       </div>
     </div>
 

@@ -45,8 +45,8 @@ myApp.factory('Angellist', function($http, CacheService) {
   return Angellist;
 });
 
-myApp.controller('ContactsCtrl', function ($scope, $location, $rootScope, Angellist, updateMenuUI) {
-  updateMenuUI.update(4);
+myApp.controller('ContactsCtrl', function ($scope, $location, $rootScope, Angellist, SideMenu) {
+  SideMenu.updateActive(5);
 
 	$scope.angellist = new Angellist(671);
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('SettingsCtrl', function ($scope, updateMenuUI) {
-  	updateMenuUI.update(6);
+  .controller('SettingsCtrl', function ($scope, SideMenu) {
+  SideMenu.updateActive(7);
 
   	$('#deleteAccountButton').click(function () {
   		$('#deleteAccountModal').appendTo("body").modal('show');

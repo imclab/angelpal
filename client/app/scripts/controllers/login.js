@@ -2,27 +2,36 @@
 
 var myApp = angular.module('clientApp');
 
-myApp.controller('LoginCtrl', function ($scope, updateMenuUI, $http, $routeParams, $rootScope, $cookies, $location) {
+myApp.controller('LoginCtrl', function ($scope, SideMenu, $http, $routeParams, $rootScope, $cookies, $location) {
+	
 	// logout
 	if ($routeParams.logout) {
-		$cookies.access_token = undefined;
+		$rootScope.isLoggedIn = false;
+		$rootScope.access_token = undefined;
 	}
 
-	if ($cookies.access_token != undefined) {
+	// already login
+	if ($rootScope.access_token != undefined) {
+		$rootScope.isLoggedIn = true;
 	    $location.path("/feeds");
 		return;
 	}
 
-  	updateMenuUI.update(0);
+	SideMenu.showMenuLogout();
+	$('#loginToggle').click(function () {
+		$('#loginForm').toggleClass('hidden-xs');
+	});
 
 	var code = $routeParams.code;
   	if (code) {
   		var url = "loginproxy/oauth/token?client_id=2453f00f021a59cf21f247862645af45&client_secret=e72b18b0210117916f987655212f5e5f&code=" + code + "&grant_type=authorization_code";
   		$http.post(url).success(function (data) {
-			$cookies.access_token = data.access_token;
+			$rootScope.access_token = data.access_token;
+			$rootScope.isLoggedIn = true;
 		    $location.path("/feeds");
 	    }).error(function(data, status) {
-			$cookies.access_token = undefined;
+	    	$rootScope.isLoggedIn = false;
+			$rootScope.access_token = undefined;
 		});
   	}
 });

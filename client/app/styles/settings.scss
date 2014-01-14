@@ -1,0 +1,43 @@
+#settings {
+
+    padding: 15px;
+
+    a {
+        font-size: 1.3em;
+    }
+
+    #account {
+        button {
+            margin-bottom: 10px;
+        }
+    }
+
+    #legals {
+        p {
+            text-align: justify;
+        }
+    }
+
+    #appVersion {
+        font-size: 0.96em;
+    }
+    
+    #appVersion:hover {
+        color: #428bca;
+        text-decoration: none;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    #settings {
+        #account {
+            button {
+                margin-bottom: 0px;
+            }
+
+            i {
+                margin-left: 20px;
+            }
+        }
+    }
+}

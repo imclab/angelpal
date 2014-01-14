@@ -1,0 +1,60 @@
+#contacts {
+    padding: 10px;
+    
+    table {
+        margin-top: 20px;
+        tr {
+            cursor: pointer;
+            td {
+                vertical-align: middle;
+                img {
+                    max-height: 80px;
+                    max-width: 80px;
+                }
+            }
+        }
+    }
+}
+
+#contactDetails {
+    padding: 20px;
+    .contactMainInfo {
+        display:inline-block;
+        text-align: center;
+        padding-top: 15px;
+        h3, h5 {
+            margin: 0px;
+        }
+    }
+    .contactImage {
+        height: 150px;
+        width: 150px;
+    }
+    .contactName {
+        font-size: 2.5em;
+    }
+    .contactBio {
+        text-align: center;
+    }
+
+    .contactLink {
+        display: inline;
+        margin-right: 20px;
+    }
+
+}
+
+.loadingContactDetails .loadingLayout {
+    margin-top: 50px;
+}
+
+@media screen and (min-width: 768px) {
+    #contactDetails {
+        .contactImage {
+            vertical-align: top;
+            margin-right: 30px;
+        }
+        .contactBio {
+        }
+    }
+}

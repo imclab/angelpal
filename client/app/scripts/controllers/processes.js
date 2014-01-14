@@ -2,8 +2,8 @@
 
 var myApp = angular.module('clientApp');
 
-myApp.controller('ProcessesCtrl', function ($scope, updateMenuUI, Processes, $rootScope, $location) {
-  	updateMenuUI.update(2);
+myApp.controller('ProcessesCtrl', function ($scope, SideMenu, Processes, $rootScope, $location) {
+  SideMenu.updateActive(3);
 
   	$scope.processes = Processes;
 

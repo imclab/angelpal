@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('clientApp')
-  .controller('FeedsCtrl', function ($scope, updateMenuUI) {
-  	updateMenuUI.update(1);
-  });
+var myApp =angular.module('clientApp');
+
+myApp.controller('FeedsCtrl', function ($scope, SideMenu) {
+	SideMenu.updateActive(2);
+});

@@ -11,8 +11,6 @@ var myApp = angular.module('clientApp', [
 ]);
 
 myApp.config(function ($routeProvider, $locationProvider) {
-    // removes hash in urls
-    $locationProvider.html5Mode(true);
 
   $routeProvider
     .when('/', {
@@ -92,11 +90,22 @@ angular.module('CacheService', ['ng'])
     return $cacheFactory('CacheService');
 });
 
-
-
-myApp.factory('updateMenuUI', function () {
+myApp.factory('SideMenu', function () {
   return {
-    update: function (index) { 
+    showMenuLogout: function () {
+      $('li', '.nav').addClass('hide');
+      $('hr', '.nav').addClass('hide');
+      $('li:nth-child(1)', '.nav').removeClass('hide');
+      $('li:nth-child(7)', '.nav').removeClass('hide');
+      this.updateActive(1);
+    },
+    showMenuLogin: function () {
+      $('li', '.nav').removeClass('hide');
+      $('hr', '.nav').removeClass('hide');
+      $('li:nth-child(1)', '.nav').addClass('hide');  
+      this.updateActive(2);
+    },
+    updateActive: function (index) { 
       $('li', '.nav').removeClass('active');
       $('li:nth-child(' + index + ')', '.nav').addClass('active');
     }
