@@ -7,7 +7,7 @@ function MysqlDb() {
 	this.db = mysql.createConnection({
 	    host: config.mysqlDb.host,
 	    user: config.mysqlDb.user,
-	    password: '',
+	    password: 'root',
 	});
 	this.db.connect();
 	this.db.query('USE ' + config.mysqlDb.name, function(err, rows, fields) {

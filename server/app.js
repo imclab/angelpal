@@ -16,7 +16,7 @@ colors.setTheme({
   debug: 'grey'
 });
 
-// Enables CORS
+// enables CORS
 var enableCORS = function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');

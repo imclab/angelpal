@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "dependencies": {
     "grunt-connect-proxy": "~0.1.7",
-    "grunt-connect-pushstate": "~0.2.0"
+    "grunt-connect-pushstate": "~0.2.0",
+    "connect-rewrite": "0.0.1",
+    "connect-modrewrite": "~0.5.11"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
