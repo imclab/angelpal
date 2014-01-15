@@ -42,16 +42,55 @@ module.exports.login = function (req, res) {
     }
 
     // login with Angellist API
-    var url = "https://angel.co/api/oauth/token?client_id=2453f00f021a59cf21f247862645af45&client_secret=e72b18b0210117916f987655212f5e5f&code=" 
+    var urlLogin = "https://angel.co/api/oauth/token?client_id=2453f00f021a59cf21f247862645af45&client_secret=e72b18b0210117916f987655212f5e5f&code=" 
                 + requestParams.code + "&grant_type=authorization_code";
     request({
-        uri: url,
+        uri: urlLogin,
         method: "POST",
         timeout: 10000
     }, function (error, response, body) {
-        // send access token to client
-        res.writeHead(200);
-        res.end(body);
+
+        // retrieve access token
+        var accessToken = JSON.parse(body).access_token;
+
+        // get user profile
+        var urlMe = "https://api.angel.co/1/me?access_token=" + accessToken;
+        request({
+            uri: urlMe,
+            method: "GET"
+        }, function (error, response, body) {
+            body = JSON.parse(body);
+            if (body.id) {
+                db.get('users', { 'angellist_id': body.id }, function (err, doc) {
+                    if (err) { throw err; }
+                    var user;
+                    if (doc && doc.length == 0) {
+                        // create new AngelPal account
+                        user = {
+                            angellist_id: body.id,
+                            access_token: accessToken,
+                            name: body.name,
+                            email: body.email
+                        };
+                        db.create('users', user, function (err, doc) {
+                            if (err) {
+                                res.writeHead(500);
+                                res.end('Server error');
+                                throw err;
+                            }
+                        });
+                    } else {
+                        user =  doc[0];
+                        delete user.access_token;
+                    }
+
+                     // send cookie to client
+                    res.writeHead(200);//, [['Set-Cookie', 'auth=' + accessToken + '; max-age:' + '7200']]);
+                    res.end(JSON.stringify(user));
+                });
+            }
+        });
+
     });
 
 

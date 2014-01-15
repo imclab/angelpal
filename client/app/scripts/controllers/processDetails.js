@@ -3,7 +3,9 @@
 var myApp = angular.module('clientApp');
 
 myApp.controller('ProcessDetailsCtrl', function ($scope, $routeParams, $http, CacheService) {
-  
+  SideMenu.showMenuLogin();
+  SideMenu.updateActive(3);
+
   var processId = $routeParams.processId;
 
   // get process details

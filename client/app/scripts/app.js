@@ -10,7 +10,13 @@ var myApp = angular.module('clientApp', [
   'CacheService'
 ]);
 
-myApp.config(function ($routeProvider, $locationProvider) {
+myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
+
+  //Enable cross domain calls
+  $httpProvider.defaults.useXDomain = true;
+
+  //Remove the header used to identify ajax call  that would prevent CORS from working
+  delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
   $locationProvider.html5Mode(true);
 
@@ -100,26 +106,28 @@ angular.module('CacheService', ['ng'])
     return $cacheFactory('CacheService');
 });
 
-myApp.factory('SideMenu', function () {
+myApp.factory('SideMenu', function (UserService) {
   return {
     showMenuLogout: function () {
       $('li', '.nav').addClass('hide');
       $('hr', '.nav').addClass('hide');
-      $('.glyphicon', '#settingsMenu').toggleClass('glyphicon-cog glyphicon-info-sign');
-      $('.menuLabel', '#settingsMenu').html('About');
+      $('.glyphicon', '#menuSettings').removeClass('glyphicon-cog').addClass('glyphicon-info-sign');
+      $('.menuLabel', '#menuSettings').html('About');
       $('li:nth-child(1)', '.nav').removeClass('hide');
       $('li:nth-child(7)', '.nav').removeClass('hide');
       $('#loginButton').removeClass('hide');
       this.updateActive(1);
+      // $('#loginName').html('').addClass('hide');
     },
     showMenuLogin: function () {
       $('li', '.nav').removeClass('hide');
       $('hr', '.nav').removeClass('hide');
-      $('.glyphicon', '#settingsMenu').toggleClass('glyphicon-cog glyphicon-info-sign');
-      $('.menuLabel', '#settingsMenu').html('Settings');
+      $('.glyphicon', '#menuSettings').removeClass('glyphicon-info-sign').addClass('glyphicon-cog');
+      $('.menuLabel', '#menuSettings').html('Settings');
       $('li:nth-child(1)', '.nav').addClass('hide');
       $('#loginButton').addClass('hide');
       this.updateActive(2);
+      // $('#loginName').html('Logged in as ' + UserService.name).removeClass('hide');
     },
     updateActive: function (index) { 
       $('li', '.nav').removeClass('active');
@@ -128,23 +136,76 @@ myApp.factory('SideMenu', function () {
   }
 });
 
-myApp.run(function ($rootScope, $location, SideMenu) {
-    $rootScope.$on('$routeChangeStart', function (event, next) {
-        var userAuthenticated = !($rootScope.access_token == undefined); /* Check if the user is logged in */
-        if (!userAuthenticated) {
+myApp.factory('AngelPalWrapper', function ($http, CacheService, $rootScope) {
+  
+  var AngelPalWrapper = function () {
+    this.busy = false;
+    this.data = [];
+    this.page = 1;
+  };
+
+  AngelPalWrapper.prototype.getFromCache = function (key) {
+    return CacheService.get(key);
+  };
+
+  AngelPalWrapper.prototype.getContacts = function () {
+    var cacheKey = 'contacts_page_' + this.page;
+    var url = "http://localhost:3000/users/" + this.userId + "/followers?page=" + this.page;
+    this.get(url, cacheKey);
+  };
+
+  AngelPalWrapper.prototype.get = function (url, cacheKey) {
+    var cachedData = this.getFromCache(cacheKey);
+    if (cachedData) {
+      this.items = this.items.concat(cachedData);
+      this.page++;
+    } else if (!this.busy) {  
+      this.busy = true;
+      $http.get(url).success(function (data) {
+        CacheService.put(cacheKey, data);
+        this.items = this.items.concat(data);
+        this.busy = false;
+        this.page++;
+      }.bind(this));
+    }
+  };
+
+  return AngelPalWrapper;
+});
+
+myApp.factory('UserService', [function () {
+    var UserService = {
+        isLogged: false,
+        id: '',
+        name: ''
+    };
+
+    return UserService;
+}]);
+
+myApp.directive('checkUser', function ($rootScope, $location, SideMenu, UserService) {
+  return {
+    link: function (scope, elem, attrs, ctrl) {
+      $rootScope.$on('$routeChangeStart', function (event, currRoute, prevRoute){
+        if (!UserService.isLogged) {
           SideMenu.showMenuLogout();
-        } else {
-            SideMenu.showMenuLogin();
-        }
-        if (!userAuthenticated && !next.isPublic) {
-            /* You can save the user's location to take him back to the same page after he has logged-in */
-            $rootScope.savedLocation = $location.url();
+          if (!prevRoute.isPublic) {
             $location.path('/');
+          }
+        } else  {
+          SideMenu.showMenuLogin();
         }
-    });
-  });
+        /*
+        * IMPORTANT:
+        * It's not difficult to fool the previous control,
+        * so it's really IMPORTANT to repeat the control also in the backend,
+        * before sending back from the server reserved information.
+        */
+      });
+    }
+  }
+});
 
 function login () {
   window.location = "https://angel.co/api/oauth/authorize?client_id=2453f00f021a59cf21f247862645af45&response_type=code";
 }
-

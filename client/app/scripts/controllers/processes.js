@@ -3,6 +3,7 @@
 var myApp = angular.module('clientApp');
 
 myApp.controller('ProcessesCtrl', function ($scope, SideMenu, Processes, $rootScope, $location) {
+  SideMenu.showMenuLogin();
   SideMenu.updateActive(3);
 
   	$scope.processes = Processes;
