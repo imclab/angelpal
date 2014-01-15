@@ -3,7 +3,9 @@
 var myApp = angular.module('clientApp');
 
 myApp.controller('ContactDetailsCtrl', function ($scope, $routeParams, $http, CacheService) {
-	
+	SideMenu.showMenuLogin();
+  	SideMenu.updateActive(5);
+
 	var contactId = $routeParams.contactId;
 
 	// get contact details

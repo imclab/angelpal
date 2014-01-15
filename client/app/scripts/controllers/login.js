@@ -2,34 +2,48 @@
 
 var myApp = angular.module('clientApp');
 
-myApp.controller('LoginCtrl', function ($scope, SideMenu, $http, $routeParams, $rootScope, $cookies, $location, $window) {
+myApp.controller('LoginCtrl', function ($scope, SideMenu, $http, $routeParams, $rootScope, $cookies, $location, $window, UserService) {
+
+	SideMenu.showMenuLogout();
 	
 	// logout
 	if ($routeParams.logout) {
-		$rootScope.access_token = undefined;
+		UserService.isLogged = false;
+		UserService.id = '';
+		UserService.name = '';
+		$cookies.access_token = undefined;
+	}
+
+	if ($cookies.access_token != undefined) {
+		// get request to server
+		UserService.isLogged = true;
 	}
 
 	// already logged in
-	if ($rootScope.access_token != undefined) {
+	if (UserService.isLogged) {
 	    $location.path("/feeds");
 		return;
 	}
 
 	var code = $routeParams.code;
+	$scope.code = code;
   	if (code) {
   		var url = "http://localhost:3000/login";
   		var postData = {
   			code: code
   		};
   		$http.post(url, postData).success(function (data) {
-			$rootScope.access_token = data.access_token;
+			UserService.isLogged = true;
+			UserService.id = data.angellist_id;
+			UserService.name = data.name;
+			$cookies.access_token = 'boboby';
 			if ($rootScope.savedLocation) {
 				$location.path($rootScope.savedLocation);
 			} else {
 		    	$location.path("/feeds");
 			}
 	    }).error(function(data, status) {
-			$rootScope.access_token = undefined;
+			UserService.logout();
 		});
   	}
 });

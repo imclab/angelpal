@@ -48,18 +48,18 @@
         </div>
         <div class="panel-body">
            <ul class="nav nav-pills nav-stacked">
-            <li class="hide">
+            <li class="active">
               <a href="/"><span class="glyphicon glyphicon-home"></span>Home</a>
             </li>
-            <li class="active">
+            <li class="hide">
               <a href="/feeds"><span class="glyphicon glyphicon-comment"></span>Feeds</a>
             </li>
-            <li><a href="/processes"><span class="glyphicon glyphicon-tasks"></span>Processes</a></li>
-            <li><a href="/organizations"><span class="glyphicon glyphicon-folder-open"></span>Organizations</a></li>
-            <li><a href="/contacts"><span class="glyphicon glyphicon-user"></span>Contacts</a></li>
-            <hr/>
+            <li class="hide"><a href="/processes"><span class="glyphicon glyphicon-tasks"></span>Processes</a></li>
+            <li class="hide"><a href="/organizations"><span class="glyphicon glyphicon-briefcase"></span>Organizations</a></li>
+            <li class="hide"><a href="/contacts"><span class="glyphicon glyphicon-user"></span>Contacts</a></li>
+            <hr class="hide"/>
             <li><a id="menuSettings" href="/settings"><span class="glyphicon glyphicon-info-sign"></span><span class="menuLabel">About</span></a></li>
-            <li><a href="/?logout=true"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
+            <li class="hide"><a href="/?logout=true"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
           </ul>
         </div>
       </div>
@@ -72,6 +72,7 @@
         </button>
         <div class="navbar-brand">AngelPal</div>
         <button id="loginButton" type="button" class="btn btn-default navbar-btn pull-right" onclick="login()">Log In</button>
+        <div id="loginName" class="navbar-text pull-right hide"></div>
       </div>
     </div>
 

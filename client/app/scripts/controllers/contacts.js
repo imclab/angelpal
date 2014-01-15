@@ -11,7 +11,7 @@ myApp.directive("contactlink", function () {
 });
 
 // Angellist constructor function to encapsulate HTTP and pagination logic
-myApp.factory('Angellist', function($http, CacheService) {
+myApp.factory('Angellist', function ($http, CacheService) {
   var Angellist = function (userId) {
     this.userId = userId;
     this.items = [];
@@ -33,7 +33,7 @@ myApp.factory('Angellist', function($http, CacheService) {
 
     this.busy = true;
 
-    var url = "api/1/users/" + this.userId + "/followers?page=" + this.page;
+    var url = "http://localhost:3000/users/" + this.userId + "/followers?page=" + this.page;
     $http.get(url).success(function (data) {
       CacheService.put('contacts_page' + this.page, data.users);
       this.items = this.items.concat(data.users);
@@ -46,6 +46,7 @@ myApp.factory('Angellist', function($http, CacheService) {
 });
 
 myApp.controller('ContactsCtrl', function ($scope, $location, $rootScope, Angellist, SideMenu) {
+  SideMenu.showMenuLogin();
   SideMenu.updateActive(5);
 
 	$scope.angellist = new Angellist(671);

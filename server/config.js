@@ -7,5 +7,6 @@ exports.server = {
 exports.mysqlDb = {
     name : 'angelpal',
     host : 'localhost',
-    user : 'root'
+    user : 'root',
+    password: 'root'
 };

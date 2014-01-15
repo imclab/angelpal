@@ -1,6 +1,5 @@
 <div id="settings">
-
-	<div ng-show="$rootScope.access_token != undefined">
+	<div ng-show="isLogged">
 		<a href="" data-toggle="collapse" data-target="#account">Account Management</a>
 		<div id="account" class="collapse">
 			<br>
@@ -10,6 +9,8 @@
 		</div>
 		<hr/>
 	</div>
+
+	{{bite}}
 
 	<a href="" data-toggle="collapse" data-target="#legals">Legals</a>
 	<div id="legals" class="collapse">
