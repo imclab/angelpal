@@ -1,22 +1,13 @@
 "use strict";
-var connect = require('connect'),
+var express = require('express'),
+    passport = require('passport'),
     util = require('util'),
-    router = require('./lib/router'),
-    auth = require('./lib/connect-auth'),
+    colors = require('colors'),
+    AngelListStrategy = require('passport-angellist').Strategy,
     user = require('./models/user'),
-    disaster = require('./models/disaster'),
     config = require('./config');
 
-// logs colors
-var colors = require('colors');
-colors.setTheme({
-  success: 'green',
-  error: 'red',
-  info: 'yellow',
-  debug: 'grey'
-});
-
-// Enables CORS
+// enable CORS
 var enableCORS = function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -31,25 +22,44 @@ var enableCORS = function(req, res, next) {
     }
 };
 
-var app = connect()
-    .use(function (req, res, next) {
-        next();
-    })
-    .use(connect.bodyParser())
-    .use(connect.cookieParser())
-    .use(function (err, req, res, next) {
-        if (err === null) { next(); }
-        res.end('Invalid JSON:' + err.message);
-    })
-    .use(enableCORS)
-    .use(router.match('POST',   '/login',                       user.login)) // login / create account
-    .use(auth.validate())
-    .use(router.match('GET',    '/users/([0-9a-f])',            user.get)) // get my user info
-    .use(router.match('GET',    '/users/([0-9a-f])/disasters',  disaster.getAll)) // get my disasters
-    .use(router.match('POST',   '/disasters',                   disaster.create)) // create disaster
-    .use(router.match('POST',   '/disasters/([0-9a-f])',        disaster.update)) // update disaster
-    .use(router.match('DELETE', '/disasters/([0-9a-f])',        disaster.remove)) // delete disaster
+// configure authentication strategy
+passport.use(new AngelListStrategy({
+    clientID: "2453f00f021a59cf21f247862645af45",
+    clientSecret: "e72b18b0210117916f987655212f5e5f",
+    callbackURL: "http://127.0.0.1:3000/auth/angellist/callback"
+  },
+  function (accessToken, refreshToken, profile, done) {
+    user.findOrCreate(profile, function (err, user) {
+        return done(err, user);
+    });
+  }
+));
+passport.serializeUser(function (user, done) {
+    done(null, user.angellist_id);
+});
+passport.deserializeUser(function (id, done) {
+    user.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
 
-    .listen(config.server.port);
+// configure server
+var app = express();
+app.configure(function () {
+    app.use(express.cookieParser());
+    app.use(express.bodyParser());
+    app.use(enableCORS);
+    app.use(express.session({ secret: 'bobby lapointe' }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(app.router);
+});
+
+// setup routes
+var controllers = require('./controllers');
+controllers.set(app);
+
+// start server
+app.listen(config.server.port);
 
 console.log('Server started on port: '.green + config.server.port);

@@ -1,14 +1,20 @@
 {
-  "name" : "angelpal_server",
+  "name": "angelpal_server",
   "description": "RESTful Web Service for AngelPal Application",
   "version": "0.0.1",
-  "scripts": { "test": "vows test/*.js" },
+  "scripts": {
+    "test": "vows test/*.js"
+  },
   "private": true,
   "dependencies": {
-  	"connect": "*",
-  	"mysql": "*",
-  	"colors": "*",
+    "connect": "*",
+    "mysql": "*",
     "vows": "*",
-    "api-easy": "*"
+    "api-easy": "*",
+    "express": "~3.4.8",
+    "passport": "~0.1.18",
+    "passport-http-bearer": "~1.0.1",
+    "passport-local": "~0.1.6",
+    "passport-angellist": "~0.1.2"
   }
 }
