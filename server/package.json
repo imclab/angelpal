@@ -10,6 +10,7 @@
     "connect": "*",
     "mysql": "*",
     "vows": "*",
+    "colors": "*",
     "api-easy": "*",
     "express": "~3.4.8",
     "passport": "~0.1.18",
