@@ -11,23 +11,31 @@ module.exports.set = function(app) {
 	
 
     /**
-    *	OAuth Redirection
+    *	OAuth Callback
     */
 	app.get('/auth/angellist/callback', 
-		passport.authenticate('angellist', { failureRedirect: 'http://google.fr' }), // Authentication failure, redirect to Web App Home
-	    function (req, res) { // Successful authentication, redirect to Web App Feeds
-	        res.redirect('/feeds');
-	    }
+		passport.authenticate('angellist', { failureRedirect: 'http://localhost:9000' }),
+		function (req, res) {
+			res.redirect('http://localhost:9000/feeds');
+		}
 	);
 
 
 	/**
 	*	Logout
 	*/
-	app.get('/logout', function (req, res){
+	app.post('/logout', function (req, res) {
 	    req.logout();
 	    res.writeHead(200);
 	    res.end('Logout OK');
+	});
+
+
+	/**
+	*	Am I logged in ?
+	*/
+	app.get('/me', function (req, res) {
+	    res.send(req.isAuthenticated() ? '1' : '0');
 	});
 
 }

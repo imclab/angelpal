@@ -4,7 +4,7 @@ exports.server = {
     port : 3000,
 };
 
-exports.mysqlDb = {
+exports.db = {
     name : 'angelpal',
     host : 'localhost',
     user : 'root',

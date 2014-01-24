@@ -5,47 +5,53 @@ var myApp = angular.module('clientApp');
 myApp.controller('LoginCtrl', function ($scope, SideMenu, $http, $routeParams, $rootScope, $cookies, $location, $window, UserService) {
 
 	SideMenu.showMenuLogout();
+
+	if ($routeParams.token) {
+		UserService.isLogged = true;
+		UserService.token = $routeParams.token;
+		$location.path("/feeds");
+	}
+
 	
 	// logout
 	if ($routeParams.logout) {
 		UserService.isLogged = false;
 		UserService.id = '';
 		UserService.name = '';
-		$cookies.access_token = undefined;
-	}
-
-	if ($cookies.access_token != undefined) {
-		// get request to server
-		UserService.isLogged = true;
-	}
-
-	// already logged in
-	if (UserService.isLogged) {
-	    $location.path("/feeds");
+		// logout from server
+		var url = "http://localhost:3000/logout";
+		$http.post(url).success(function (data) {
+			console.log(data)
+		});
 		return;
 	}
 
-	var code = $routeParams.code;
-	$scope.code = code;
-  	if (code) {
-  		var url = "http://localhost:3000/login";
-  		var postData = {
-  			code: code
-  		};
-  		$http.post(url, postData).success(function (data) {
-			UserService.isLogged = true;
-			UserService.id = data.angellist_id;
-			UserService.name = data.name;
-			$cookies.access_token = 'boboby';
-			if ($rootScope.savedLocation) {
-				$location.path($rootScope.savedLocation);
-			} else {
-		    	$location.path("/feeds");
-			}
-	    }).error(function(data, status) {
-			UserService.logout();
-		});
-  	}
+	// // already logged in
+	// if (UserService.isLogged) {
+	//     $location.path("/feeds");
+	// 	return;
+	// }
+
+	// // check if logged in on the server
+	// var url = "http://localhost:3000/me";
+	// $http.get(url).success(function (data) {
+	// 	if (data.id) {
+	// 		UserService.isLogged = true;
+	// 		UserService.id = data.id;
+	// 		UserService.angellist_id = data.angellist_id;
+	// 		UserService.name = data.name;
+	// 		if ($rootScope.savedLocation) {
+	// 			$location.path($rootScope.savedLocation);
+	// 		} else {
+	// 			$location.path("/feeds");
+	// 		}
+	// 	} else {
+	// 		// UserService.logout();
+	// 	}
+	// }).error(function (data, status) {
+	// 	// UserService.logout();
+	// });
+
 });
 
 myApp.directive("backbutton", function () {

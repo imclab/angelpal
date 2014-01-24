@@ -14,6 +14,7 @@ myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
   //Enable cross domain calls
   $httpProvider.defaults.useXDomain = true;
+  $httpProvider.defaults.withCredentials = true;
 
   //Remove the header used to identify ajax call  that would prevent CORS from working
   delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -23,46 +24,63 @@ myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
   $routeProvider
     .when('/', {
       templateUrl: 'views/login.html',
-      controller: 'LoginCtrl',
-      isPublic: true
+      controller: 'LoginCtrl'
+    })
+    .when('/auth/angellist/callback', {
+      redirectTo: '/feeds'
     })
     .when('/feeds', {
       templateUrl: 'views/feeds.html',
       controller: 'FeedsCtrl',
-      isPublic: false
+      resolve: { loggedin: checkLoggedin }
     })
     .when('/processes', {
       templateUrl: 'views/processes.html',
       controller: 'ProcessesCtrl',
-      isPublic: false
+      resolve: { loggedin: checkLoggedin }
     })
     .when('/processes/:processId', {
       templateUrl: 'views/processDetails.html',
       controller: 'ProcessDetailsCtrl',
-      isPublic: false
+      resolve: { loggedin: checkLoggedin }
     })
     .when('/organizations', {
       templateUrl: 'views/organizations.html',
       controller: 'OrganizationsCtrl',
-      isPublic: false
+      resolve: { loggedin: checkLoggedin }
     })
     .when('/contacts', {
       templateUrl: 'views/contacts.html',
       controller: 'ContactsCtrl',
-      isPublic: false
+      resolve: { loggedin: checkLoggedin }
     })
     .when('/contacts/:contactId', {
       templateUrl: 'views/contactDetails.html',
       controller: 'ContactDetailsCtrl',
-      isPublic: false
+      resolve: { loggedin: checkLoggedin }
     })
     .when('/settings', {
       templateUrl: 'views/settings.html',
-      controller: 'SettingsCtrl',
-      isPublic: true
+      controller: 'SettingsCtrl'
     })
     .otherwise({
       redirectTo: '/'
+    });
+
+    $httpProvider.responseInterceptors.push(function ($q, $location) {
+      return function (promise) {
+        return promise.then(
+          // Success: just return the response
+          function (response) {
+            return response;
+          }, // Error: check the error status to get only the 401
+          function (response) {
+            if (response.status === 401)
+              $location.url('/');
+              return $q.reject(response);
+          } 
+        ); 
+      } 
     });
 
 });
@@ -176,36 +194,28 @@ myApp.factory('AngelPalWrapper', function ($http, CacheService, $rootScope) {
 myApp.factory('UserService', [function () {
     var UserService = {
         isLogged: false,
-        id: '',
-        name: ''
+        token: ''
     };
 
     return UserService;
 }]);
 
-myApp.directive('checkUser', function ($rootScope, $location, SideMenu, UserService) {
-  return {
-    link: function (scope, elem, attrs, ctrl) {
-      $rootScope.$on('$routeChangeStart', function (event, currRoute, prevRoute){
-        if (!UserService.isLogged) {
-          SideMenu.showMenuLogout();
-          if (!prevRoute.isPublic) {
-            $location.path('/');
-          }
-        } else  {
-          SideMenu.showMenuLogin();
-        }
-        /*
-        * IMPORTANT:
-        * It's not difficult to fool the previous control,
-        * so it's really IMPORTANT to repeat the control also in the backend,
-        * before sending back from the server reserved information.
-        */
-      });
-    }
-  }
-});
+var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, UserService) {
+  // // Initialize a new promise v
+  // var deferred = $q.defer(); 
 
-function login () {
-  window.location = "https://angel.co/api/oauth/authorize?client_id=2453f00f021a59cf21f247862645af45&response_type=code";
-}
+  // // Make an AJAX call to check if the user is logged in 
+  // $http.get('http://localhost:3000/me', {token: UserService.token})
+  // .success(function (user) { 
+  //   if (user !== '0') { // Authenticated 
+  //     $timeout(deferred.resolve, 0); 
+  //   } else { // Not Authenticated 
+  //     $rootScope.message = 'You need to log in.';
+  //     $timeout(function(){deferred.reject();}, 0);
+  //     $location.url('/');
+  //   } 
+  // }).error(function (error) {
+  //     $timeout(function(){deferred.reject();}, 0);
+  //     $location.url('/');
+  // });
+};

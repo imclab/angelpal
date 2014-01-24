@@ -1,21 +1,34 @@
 "use strict";
-var passport = require('passport'),
-	organization = require('../models/organization.js');
+var passport = require('passport');
 
 module.exports.set = function(app) {
+
+	var Organization = app.get('models').Organization,
+		User = app.get('models').User;
     
 
 	 /**
 	 *	Get all my organizations
 	 */
 	app.get('/organizations', passport.ensureAuthenticated, function (req, res) {
-		organization.getAll(req.user.angellist_id, function (err, result) {
-			if (err) {
+		// get user
+		User.find({ where: {angellist_id: req.user.angellist_id} })
+		.success(function (user) {
+			if (invitee == null) { res.send('User not found');return; }
+			
+			// get user's organizations
+			user.getOrganizations()
+			.success(function (organizations) {
+				res.send(organizations);
+			})
+			.error(function (error) {
 				res.writeHead(500);
 				res.end('Server error');
-			} else {
-				res.send(result);
-			}
+			});
+		})
+		.error(function (error) {
+			res.writeHead(500);
+			res.end('Server error');
 		});
 	});
 
@@ -33,13 +46,30 @@ module.exports.set = function(app) {
 			return;
 		}
 
-		organization.create(req.user.angellist_id, postData.name, function (err, result) {
-			if (err) {
+		// get user
+		User.find({ where: {angellist_id: req.user.angellist_id} })
+		.success(function (user) {
+			if (invitee == null) { res.send('User not found');return; }
+			Organization.create({ name: postData.name })
+			.success(function (newOrganization) {
+				// add new organization
+				user.addOrganization(newOrganization, {role: 10})
+				.success(function () {
+					res.send('OK');
+				})
+				.error(function (error) {
+					res.writeHead(500);
+					res.end('Server error');
+				});
+			})
+			.error(function (error) {
 				res.writeHead(500);
 				res.end('Server error');
-			} else {
-				res.send(result);
-			}
+			});
+		})
+		.error(function (error) {
+			res.writeHead(500);
+			res.end('Server error');
 		});
 	});
 
@@ -48,13 +78,39 @@ module.exports.set = function(app) {
 	 *	Get organization details
 	 */
 	app.get('/organizations/:id', passport.ensureAuthenticated, function (req, res) {
-		organization.getDetails(req.user.angellist_id, req.params.id, function (err, result) {
-			if (err) {
+		// get user
+		User.find({ where: {angellist_id: req.user.angellist_id} })
+		.success(function (user) {
+			// get organization
+			user.getOrganizations({ where: {id: req.params.id} })
+			.success(function (organizations) {
+				if (organization == null) { res.end('Organization not found');return; }
+				if (organizations.length > 0) {
+					organizations[0].getUsers()
+					.success(function (users) {
+						// add user's role
+						for (var i in users) {
+							users[i].dataValues.role = users[i].UserRoles.role;
+						}
+						organizations[0].dataValues.members	 = users;
+						res.send(organizations[0]);
+					})
+					.error(function (error) {
+						res.writeHead(500);
+						res.end('Server error');
+					});
+				} else {
+					res.send('No results');
+				}
+			})
+			.error(function (error) {
 				res.writeHead(500);
 				res.end('Server error');
-			} else {
-				res.send(result);
-			}
+			});
+		})
+		.error(function (error) {
+			res.writeHead(500);
+			res.end('Server error');
 		});
 	});
 
@@ -72,13 +128,46 @@ module.exports.set = function(app) {
 			return;
 		}
 
-		organization.invite(req.user.angellist_id, req.params.id, req.params.userId, postData.role, function (err, result) {
-			if (err) {
+		// get organization
+		Organization.find({ where: {id: req.params.id} })
+		.success(function (organization) {
+			if (organization == null) { res.end('Organization not found');return; }
+			// check user is admin
+			organization.getUsers({where: {userId: req.user.id, role: 10}})
+			.success(function (users) {
+				if (users.length > 0) {
+					// get invitee user
+					User.find({ where: {id: req.params.userId}})
+					.success(function (invitee) {
+						if (invitee == null) { res.send('User not found');return; }
+
+						// add user to organization
+						organization.addUser(invitee, {role: postData.role})
+						.success(function () {
+							res.send('OK');
+						})
+						.error(function (error) {
+							res.writeHead(500);
+							res.end('Server error');
+						});
+					})
+					.error(function (error) {
+						res.writeHead(500);
+						res.end('Server error');
+					});
+				} else {
+					res.writeHead(401);
+					res.end('Unauthorized');
+				}
+			})
+			.error(function (error) {
 				res.writeHead(500);
 				res.end('Server error');
-			} else {
-				res.send(result);
-			}
+			});
+		})
+		.error(function (error) {
+			res.writeHead(500);
+			res.end('Server error');
 		});
 	});
 
@@ -96,15 +185,128 @@ module.exports.set = function(app) {
 			return;
 		}
 
-		organization.changePermission(req.user.angellist_id, req.params.id, req.params.userId, postData.role, function (err, result) {
-			if (err) {
+		// get organization
+		Organization.find({ where: {id: req.params.id} })
+		.success(function (organization) {
+			if (organization == null) { res.end('Organization not found');return; }
+			// check user is admin
+			organization.getUsers({where: {userId: req.user.id, role: 10}})
+			.success(function (users) {
+				if (users.length > 0) {
+					// get invitee user
+					organization.getUsers({where: {userId: req.params.userId, organizationId: req.params.id}})
+					.success(function (users) {
+						if (users.length > 0) {
+							users[0].UserRoles.role = postData.role;
+							users[0].UserRoles.save();
+							res.end('OK');
+						} else {
+							res.end('Invitee not found');
+						}
+					})
+					.error(function (error) {
+						res.writeHead(500);
+						res.end('Server error');
+					});
+				} else {
+					res.writeHead(401);
+					res.end('Unauthorized');
+				}
+			})
+			.error(function (error) {
 				res.writeHead(500);
 				res.end('Server error');
-			} else {
-				res.send(result);
-			}
+			});
+		})
+		.error(function (error) {
+			res.writeHead(500);
+			res.end('Server error');
 		});
 	});
 
+
+	/**
+	 *	Leave organization
+	 */
+	app.post('/organizations/:id/users/:userId/leave', passport.ensureAuthenticated, function (req, res) {
+		var userId = req.user.id;
+		var leaverId = req.params.userId;
+
+		// get organization
+		Organization.find({ where: {id: req.params.id} })
+		.success(function (organization) {
+			if (organization == null) { res.end('Organization not found');return; }
+			if (userId != leaverId) {
+				// kicking off another user
+				// check if user is admin
+				organization.getUsers({where: {userId: userId, role: 10}})
+				.success(function (users) {
+					if (users.length > 0) {
+						// get invitee user
+						organization.getUsers({where: {userId: leaverId, organizationId: req.params.id}})
+						.success(function (users) {
+							if (users.length > 0) {
+								organization.removeUser(users[0]);
+								res.end('OK');
+							} else {
+								res.end('Invitee not found');
+							}
+						})
+						.error(function (error) {
+							res.writeHead(500);
+							res.end('Server error');
+						});
+					} else {
+						res.writeHead(401);
+						res.end('Unauthorized');
+					}
+				})
+				.error(function (error) {
+					res.writeHead(500);
+					res.end('Server error');
+				});
+			} else {
+				// user is leaving
+				// check if there is an admin left
+				organization.getUsers({where: {userId: {ne: userId}, role: 10}})
+				.success(function (users) {
+					if (users.length > 0) {
+						organization.getUsers({where: {userId: leaverId, organizationId: req.params.id}})
+						.success(function (users) {
+							if (users.length > 0) {
+								organization.removeUser(users[0]);
+								res.end('OK');
+							} else {
+								res.end('Invitee not found');
+							}
+						})
+						.error(function (error) {
+							res.writeHead(500);
+							res.end('Server error');
+						});
+					} else {
+						organization.getUsers()
+						.success(function (users) {
+							if (users.length == 1) {
+								organization.destroy();
+								res.end('OK');
+							} else {
+								res.writeHead(401);
+								res.end('Choose another admin before leaving this organization');
+							}
+						});
+					}
+				})
+				.error(function (error) {
+					res.writeHead(500);
+					res.end('Server error');
+				});
+			}
+		})
+		.error(function (error) {
+			res.writeHead(500);
+			res.end('Server error');
+		});
+	});
 
 }
