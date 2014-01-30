@@ -6,51 +6,26 @@ myApp.controller('LoginCtrl', function ($scope, SideMenu, $http, $routeParams, $
 
 	SideMenu.showMenuLogout();
 
-	if ($routeParams.token) {
-		UserService.isLogged = true;
-		UserService.token = $routeParams.token;
+	// authentification callback
+	if ($routeParams.token != undefined) {
+		$cookies.angelpal_token = $routeParams.token;
+		$location.search('token', null);
 		$location.path("/feeds");
-	}
-
-	
-	// logout
-	if ($routeParams.logout) {
-		UserService.isLogged = false;
-		UserService.id = '';
-		UserService.name = '';
-		// logout from server
-		var url = "http://localhost:3000/logout";
-		$http.post(url).success(function (data) {
-			console.log(data)
-		});
 		return;
 	}
 
-	// // already logged in
-	// if (UserService.isLogged) {
-	//     $location.path("/feeds");
-	// 	return;
-	// }
+	// logout
+	if ($routeParams.logout) {
+		$cookies.angelpal_token = '';
+		$location.search('logout', null);
+		UserService.logout();
+		return;
+	}
 
-	// // check if logged in on the server
-	// var url = "http://localhost:3000/me";
-	// $http.get(url).success(function (data) {
-	// 	if (data.id) {
-	// 		UserService.isLogged = true;
-	// 		UserService.id = data.id;
-	// 		UserService.angellist_id = data.angellist_id;
-	// 		UserService.name = data.name;
-	// 		if ($rootScope.savedLocation) {
-	// 			$location.path($rootScope.savedLocation);
-	// 		} else {
-	// 			$location.path("/feeds");
-	// 		}
-	// 	} else {
-	// 		// UserService.logout();
-	// 	}
-	// }).error(function (data, status) {
-	// 	// UserService.logout();
-	// });
+	// if already logged in
+	if ($cookies.angelpal_token != '') { // Might be logged in
+		$location.path("/feeds");
+	}
 
 });
 

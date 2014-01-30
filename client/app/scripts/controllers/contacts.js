@@ -2,24 +2,17 @@
 
 var myApp = angular.module('clientApp');
 
-myApp.directive("contactlink", function () {
-	return function(scope, element, attrs, location) {
-		element.click(function () {
-			scope.changeView('contacts/' + attrs.contactlink);
-		});
-	}
-});
-
 // Angellist constructor function to encapsulate HTTP and pagination logic
-myApp.factory('Angellist', function ($http, CacheService) {
-  var Angellist = function (userId) {
-    this.userId = userId;
+myApp.factory('Angellist', function ($http, CacheService, $cookies, $rootScope) {
+  var Angellist = function () {
     this.items = [];
     this.busy = false;
     this.page = 1;
+    this.done = false;
   };
 
   Angellist.prototype.getContacts = function () {
+    if (this.done ) { return; }
 
     // use cache
     var contacts = CacheService.get('contacts_page' + this.page);
@@ -32,13 +25,16 @@ myApp.factory('Angellist', function ($http, CacheService) {
     } 
 
     this.busy = true;
-
-    var url = "http://localhost:3000/users/" + this.userId + "/followers?page=" + this.page;
+    var url = "/api/1/users/" + $rootScope.angellist_id + "/followers?page=" + this.page;
     $http.get(url).success(function (data) {
       CacheService.put('contacts_page' + this.page, data.users);
       this.items = this.items.concat(data.users);
-      this.page++;
       this.busy = false;
+      if (this.page >= data.last_page) { 
+        this.done = true;
+      } else {
+        this.page++;
+      }
     }.bind(this));
   };
 
@@ -49,11 +45,9 @@ myApp.controller('ContactsCtrl', function ($scope, $location, $rootScope, Angell
   SideMenu.showMenuLogin();
   SideMenu.updateActive(5);
 
-	$scope.angellist = new Angellist(671);
+  $scope.angellist = new Angellist();
 
-	$scope.changeView = function (view){
-		$rootScope.$apply(function () {
-      $location.path(view);
-  	});
+	$scope.seeContactDetails = function (id){
+      $location.path('contacts/' + id);
   }
 });

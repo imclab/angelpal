@@ -1,13 +1,15 @@
-<div id="processes">
+<div id="processes" class="mainContent">
+
 	<div class="headerContent">
 		<div class="row">
 			<div class="input-group col-md-3">
 				<span class="input-group-addon glyphicon glyphicon-search"></span>
 				<input type="text" class="form-control searchInput" ng-model="search.name" placeholder="search...">
 			</div>
-			<addnew class="col-md-3 col-md-offset-6"/>
+			<addnew class="col-md-3 col-md-offset-6" label="'new process...'"/>
 		</div>
 	</div>
+
 	<div infinite-scroll='angellist.getContacts()' infinite-scroll-disabled='angellist.busy' infinite-scroll-distance='1'>
 	  	<table class="table table-hover">
 		    <tr ng-repeat="process in processes | filter:search" processlink="{{process.id}}">
@@ -16,4 +18,5 @@
 	  	</table>
 	  	<loadinglayout ng-show="true" label="'Loading processes'"/>
 	</div>
+	
 </div>

@@ -26,9 +26,6 @@ myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
       templateUrl: 'views/login.html',
       controller: 'LoginCtrl'
     })
-    .when('/auth/angellist/callback', {
-      redirectTo: '/feeds'
-    })
     .when('/feeds', {
       templateUrl: 'views/feeds.html',
       controller: 'FeedsCtrl',
@@ -49,6 +46,11 @@ myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
       controller: 'OrganizationsCtrl',
       resolve: { loggedin: checkLoggedin }
     })
+    .when('/organizations/:organizationId', {
+      templateUrl: 'views/organizationDetails.html',
+      controller: 'OrganizationDetailsCtrl',
+      resolve: { loggedin: checkLoggedin }
+    })
     .when('/contacts', {
       templateUrl: 'views/contacts.html',
       controller: 'ContactsCtrl',
@@ -67,7 +69,7 @@ myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
       redirectTo: '/'
     });
 
-    $httpProvider.responseInterceptors.push(function ($q, $location) {
+    $httpProvider.responseInterceptors.push(function ($q, $location, $cookies) {
       return function (promise) {
         return promise.then(
           // Success: just return the response
@@ -75,9 +77,11 @@ myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
             return response;
           }, // Error: check the error status to get only the 401
           function (response) {
-            if (response.status === 401)
+            if (response.status === 401) {
+              $cookies.angelpal_token = '';
               $location.url('/');
-              return $q.reject(response);
+            }
+            return $q.reject(response);
           } 
         ); 
       } 
@@ -191,31 +195,36 @@ myApp.factory('AngelPalWrapper', function ($http, CacheService, $rootScope) {
   return AngelPalWrapper;
 });
 
-myApp.factory('UserService', [function () {
+myApp.factory('UserService', function ($cookies) {
     var UserService = {
-        isLogged: false,
-        token: ''
+        user: null
+    };
+
+    UserService.logout = function () {
+      UserService.user = null;
+    };
+
+    UserService.login = function (user) {
+      UserService.user = user;
     };
 
     return UserService;
-}]);
+});
 
-var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, UserService) {
-  // // Initialize a new promise v
-  // var deferred = $q.defer(); 
+var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, UserService, $cookies) {
+  // Initialize a new promise v
+  var deferred = $q.defer();
 
-  // // Make an AJAX call to check if the user is logged in 
-  // $http.get('http://localhost:3000/me', {token: UserService.token})
-  // .success(function (user) { 
-  //   if (user !== '0') { // Authenticated 
-  //     $timeout(deferred.resolve, 0); 
-  //   } else { // Not Authenticated 
-  //     $rootScope.message = 'You need to log in.';
-  //     $timeout(function(){deferred.reject();}, 0);
-  //     $location.url('/');
-  //   } 
-  // }).error(function (error) {
-  //     $timeout(function(){deferred.reject();}, 0);
-  //     $location.url('/');
-  // });
+  $http.defaults.headers.common.Authorization = $cookies.angelpal_token;
+
+  // Make an AJAX call to check if the user is logged in
+  $http.get('http://localhost:3000/me')
+  .success(function (user) { // Authenticated
+    UserService.login(user);
+    $rootScope.angellist_id = user.angellist_id;
+    $timeout(deferred.resolve, 0); 
+  }).error(function (error) {
+    UserService.logout();
+    $timeout(function(){deferred.reject();}, 0);
+  });
 };

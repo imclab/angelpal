@@ -8,7 +8,7 @@ var express = require('express'),
 
 // enable CORS
 var enableCORS = function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://0.0.0.0:9000');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
@@ -25,14 +25,12 @@ var enableCORS = function(req, res, next) {
 // configure server
 var app = express();
 app.configure(function () {
-    app.set('view engine', 'ejs');
     app.use(express.cookieParser());
     app.use(express.bodyParser());
     app.use(enableCORS);
     app.use(express.session({ secret: 'bobby lapointe' }));
     app.use(passport.initialize());
     app.use(passport.session());
-    app.use(express.static(__dirname + '/public/app'));
     app.use(app.router);
 });
 

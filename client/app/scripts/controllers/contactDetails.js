@@ -2,7 +2,7 @@
 
 var myApp = angular.module('clientApp');
 
-myApp.controller('ContactDetailsCtrl', function ($scope, $routeParams, $http, CacheService) {
+myApp.controller('ContactDetailsCtrl', function ($scope, $routeParams, $http, CacheService, SideMenu, $cookies) {
 	SideMenu.showMenuLogin();
   	SideMenu.updateActive(5);
 
@@ -20,6 +20,26 @@ myApp.controller('ContactDetailsCtrl', function ($scope, $routeParams, $http, Ca
 			CacheService.put('contact_' + contactId, data);
 	    }).error(function(data, status) {
 		});
-    }	
+    }
+
+    $scope.showInviteDialog = function () {
+    	var url = "http://localhost:3000/organizations";
+	    $http.get(url).success(function (organizations) {
+	    	$scope.organizations = organizations;
+	    }.bind(this));
+		$('#inviteModal').appendTo("body").modal('show');
+	};
+
+
+	$('#inviteConfirm').click(function () {
+	  	$http.defaults.headers.common.Authorization = $cookies.angelpal_token;
+		var url = "http://localhost:3000/organizations/" + $('select', '#inviteModal').val() + '/users/' + contactId;
+	    $http.post(url, {role: $('#makeAdmin', '#inviteModal').is(':checked') ? 10 : 0})
+	    .success(function (data) {
+			$('#inviteModal').modal('hide');
+	    }).error(function(data, status) {
+	    	$('#inviteModal').modal('hide');
+		});
+	});
 
 });

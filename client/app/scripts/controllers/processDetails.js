@@ -2,7 +2,7 @@
 
 var myApp = angular.module('clientApp');
 
-myApp.controller('ProcessDetailsCtrl', function ($scope, $routeParams, $http, CacheService) {
+myApp.controller('ProcessDetailsCtrl', function ($scope, $routeParams, $http, CacheService, SideMenu) {
   SideMenu.showMenuLogin();
   SideMenu.updateActive(3);
 

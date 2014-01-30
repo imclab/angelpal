@@ -219,3 +219,24 @@ button .glyphicon {
 .modal-footer {
     margin-top: 0px;
 }
+
+.mainContent {
+    padding: 10px;
+    table {
+        tr {
+            cursor: pointer;
+            td {
+                font-size: 1.2em;
+                padding: 15px;
+            }
+        }
+    }
+}
+
+.headerContent {
+    width: 100%;
+
+    button.pull-right {
+        margin-left: 10px;
+    }
+}

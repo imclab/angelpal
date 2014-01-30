@@ -82,16 +82,6 @@ module.exports = function (grunt) {
               '^/api': '',
           }
       }
-      // {
-      //     context: '/loginproxy',
-      //     host: '0.0.0.0',
-      //     port: 3000,
-      //     https: false,
-      //     changeOrigin: true,
-      //     rewrite: {
-      //         '^/loginproxy': '',
-      //     }
-      // }
       ],
       livereload: {
         options: {
@@ -100,16 +90,31 @@ module.exports = function (grunt) {
             '.tmp',
             '<%= yeoman.app %>'
           ],
-          middleware: function (connect) {
-            return [
-              modRewrite([
-                '!\\.\\w+$ /'
-              ]),
-              proxySnippet,
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, 'app')
-            ];
-          }        
+          middleware: function (connect, options) {
+              if (!Array.isArray(options.base)) {
+                  options.base = [options.base];
+              }
+
+              var middlewares = [
+                require('grunt-connect-proxy/lib/utils').proxyRequest,
+                modRewrite([
+                  '!\\.\\w+$ /'
+                ]),
+                mountFolder(connect, '.tmp'),
+                mountFolder(connect, 'app')
+              ];
+
+              // Serve static files.
+              options.base.forEach(function(base) {
+                  middlewares.push(connect.static(base));
+              });
+
+              // Make directory browse-able.
+              var directory = options.directory || options.base[options.base.length - 1];
+              middlewares.push(connect.directory(directory));
+
+              return middlewares;
+          }    
         }        
       },
       test: {

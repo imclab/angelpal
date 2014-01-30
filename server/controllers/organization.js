@@ -14,7 +14,7 @@ module.exports.set = function(app) {
 		// get user
 		User.find({ where: {angellist_id: req.user.angellist_id} })
 		.success(function (user) {
-			if (invitee == null) { res.send('User not found');return; }
+			if (user == null) { res.send('User not found');return; }
 			
 			// get user's organizations
 			user.getOrganizations()
@@ -41,7 +41,7 @@ module.exports.set = function(app) {
 
 		// check data
 		if (!postData.name || postData.name.length == 0) {
-			res.writeHead(401);
+			res.writeHead(400);
 			res.end('Missing fields');
 			return;
 		}
@@ -49,7 +49,7 @@ module.exports.set = function(app) {
 		// get user
 		User.find({ where: {angellist_id: req.user.angellist_id} })
 		.success(function (user) {
-			if (invitee == null) { res.send('User not found');return; }
+			if (user == null) { res.send('User not found');return; }
 			Organization.create({ name: postData.name })
 			.success(function (newOrganization) {
 				// add new organization
@@ -84,12 +84,13 @@ module.exports.set = function(app) {
 			// get organization
 			user.getOrganizations({ where: {id: req.params.id} })
 			.success(function (organizations) {
-				if (organization == null) { res.end('Organization not found');return; }
+				if (organizations == null) { res.writeHead(400);res.end('Organization not found');return; }
 				if (organizations.length > 0) {
 					organizations[0].getUsers()
 					.success(function (users) {
 						// add user's role
 						for (var i in users) {
+							users[i].token = '';
 							users[i].dataValues.role = users[i].UserRoles.role;
 						}
 						organizations[0].dataValues.members	 = users;
@@ -122,8 +123,8 @@ module.exports.set = function(app) {
 		var postData = req.body;
 
 		// check data
-		if (!postData.role) {
-			res.writeHead(401);
+		if (postData.role == null) {
+			res.writeHead(400);
 			res.end('Missing fields');
 			return;
 		}
@@ -139,7 +140,7 @@ module.exports.set = function(app) {
 					// get invitee user
 					User.find({ where: {id: req.params.userId}})
 					.success(function (invitee) {
-						if (invitee == null) { res.send('User not found');return; }
+						if (invitee == null) { res.writeHead(400);res.end('User not found');return; }
 
 						// add user to organization
 						organization.addUser(invitee, {role: postData.role})
@@ -156,7 +157,7 @@ module.exports.set = function(app) {
 						res.end('Server error');
 					});
 				} else {
-					res.writeHead(401);
+					res.writeHead(400);
 					res.end('Unauthorized');
 				}
 			})
@@ -180,7 +181,7 @@ module.exports.set = function(app) {
 
 		// check data
 		if (!postData.role) {
-			res.writeHead(401);
+			res.writeHead(400);
 			res.end('Missing fields');
 			return;
 		}
@@ -209,7 +210,7 @@ module.exports.set = function(app) {
 						res.end('Server error');
 					});
 				} else {
-					res.writeHead(401);
+					res.writeHead(400);
 					res.end('Unauthorized');
 				}
 			})
@@ -257,7 +258,7 @@ module.exports.set = function(app) {
 							res.end('Server error');
 						});
 					} else {
-						res.writeHead(401);
+						res.writeHead(400);
 						res.end('Unauthorized');
 					}
 				})
@@ -291,7 +292,7 @@ module.exports.set = function(app) {
 								organization.destroy();
 								res.end('OK');
 							} else {
-								res.writeHead(401);
+								res.writeHead(400);
 								res.end('Choose another admin before leaving this organization');
 							}
 						});

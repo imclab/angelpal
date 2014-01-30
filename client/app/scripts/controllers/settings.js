@@ -4,16 +4,8 @@ var myApp = angular.module('clientApp');
 
 myApp.controller('SettingsCtrl', function ($scope, SideMenu, UserService, $cookies, $http) {
 
-  var url = "http://localhost:3000/me";
-  $http.get(url).success(function (data) {
-    if (data.id) {
-      UserService.isLogged = true;
-      UserService.id = data.id;
-      UserService.angellist_id = data.angellist_id;
-      UserService.name = data.name;
-
-      $scope.isLogged = UserService.isLogged;
-
+  if (UserService.user != null) {
+      $scope.isLogged = true;
       SideMenu.showMenuLogin();
 
       $('#deleteAccountButton').click(function () {
@@ -25,13 +17,10 @@ myApp.controller('SettingsCtrl', function ($scope, SideMenu, UserService, $cooki
         console.log("TODO : call logout + delete account on server");
       });
 
-    } else {
-        SideMenu.showMenuLogout();
-    }
-
-    SideMenu.updateActive(7);
-
-  });
+  } else {
+      $scope.isLogged = false;
+      SideMenu.showMenuLogout();
+  }
 
   SideMenu.updateActive(7);
 

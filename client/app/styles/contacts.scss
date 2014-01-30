@@ -1,5 +1,4 @@
 #contacts {
-    padding: 10px;
     
     table {
         margin-top: 20px;
@@ -17,7 +16,6 @@
 }
 
 #contactDetails {
-    padding: 20px;
     .contactMainInfo {
         display:inline-block;
         text-align: center;
@@ -57,4 +55,15 @@
         .contactBio {
         }
     }
+}
+
+#inviteModal {
+
+    .modal-content {
+        padding: 20px;
+    }
+    label {
+        margin-top: 15px;
+    }
+
 }

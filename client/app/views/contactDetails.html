@@ -1,31 +1,63 @@
-<backbutton/>
-        
-<div id="contactDetails" ng-show="contact">
+<div id="contactDetails" class="mainContent">
 
-	<div class="row text-center">
-		<img class="img-circle img-thumbnail contactImage" alt="contact image" src="{{contact.image}}"/>
-		<div class="contactMainInfo">
-			<strong class="contactName">{{contact.name}}</strong>
-			<br>
-			<h3 ng-if="contact.roles.length > 0" class="contactRole">{{contact.roles[0].display_name}}</h3>
-			<br>
-			<h5 ng-if="contact.locations.length > 0" class="contactLocation">{{contact.locations[0].display_name}}</h5>
-		</div>
+    <div class="input-group row headerContent">
+        <backbutton class="pull-left"/>
+        <button ng-click="showInviteDialog()" class="btn btn-success pull-right"><span class="glyphicon glyphicon-briefcase"></span> Invite to organization</button>
     </div>
-    <hr/>
-	<div class="row">
-    	<div class="contactBio">{{contact.bio}}</div>
+
+    <div ng-show="contact">
+    	<div class="row text-center">
+    		<img class="img-circle img-thumbnail contactImage" alt="contact image" src="{{contact.image}}"/>
+    		<div class="contactMainInfo">
+    			<strong class="contactName">{{contact.name}}</strong>
+    			<br>
+    			<h3 ng-if="contact.roles.length > 0" class="contactRole">{{contact.roles[0].display_name}}</h3>
+    			<br>
+    			<h5 ng-if="contact.locations.length > 0" class="contactLocation">{{contact.locations[0].display_name}}</h5>
+    		</div>
+        </div>
+        <hr/>
+    	<div class="row">
+        	<div class="contactBio">{{contact.bio}}</div>
+        </div>
+        <hr/>
+        <div class="row text-center">
+        	<div ng-if="contact.blog_url" class="contactLink"><a href="{{contact.blog_url}}" target="_link">Blog</a></div>
+        	<div ng-if="contact.online_bio_url" class="contactLink"><a href="{{contact.online_bio_url}}" target="_link">Website</a></div>
+        	<div ng-if="contact.angellist_url" class="contactLink"><a href="{{contact.angellist_url}}" target="_link">AngelList Profile</a></div>
+    	    <div ng-if="contact.twitter_url" class="contactLink"><a href="{{contact.twitter_url}}" target="_link">Twitter</a></div>
+        	<div ng-if="contact.facebook_url" class="contactLink"><a href="{{contact.facebook_url}}" target="_link">Facebook</a></div>
+        	<div ng-if="contact.linkedin_url" class="contactLink"><a href="{{contact.linkedin_url}}" target="_link">LinkedIn</a></div>
+        </div>
     </div>
-    <hr/>
-    <div class="row text-center">
-    	<div ng-if="contact.blog_url" class="contactLink"><a href="{{contact.blog_url}}" target="_link">Blog</a></div>
-    	<div ng-if="contact.online_bio_url" class="contactLink"><a href="{{contact.online_bio_url}}" target="_link">Website</a></div>
-    	<div ng-if="contact.angellist_url" class="contactLink"><a href="{{contact.angellist_url}}" target="_link">AngelList Profile</a></div>
-	    <div ng-if="contact.twitter_url" class="contactLink"><a href="{{contact.twitter_url}}" target="_link">Twitter</a></div>
-    	<div ng-if="contact.facebook_url" class="contactLink"><a href="{{contact.facebook_url}}" target="_link">Facebook</a></div>
-    	<div ng-if="contact.linkedin_url" class="contactLink"><a href="{{contact.linkedin_url}}" target="_link">LinkedIn</a></div>
-    </div>
+    
+    <loadinglayout class="loadingContactDetails" ng-show="!contact" label="'Loading contact info'"/>
 
 </div>
 
-<loadinglayout class="loadingContactDetails" ng-show="!contact" label="'Loading contact info'"/>
+<!-- INVITE TO ORGANIZATION POPUP -->
+<div id="inviteModal" class="modal fade chooser" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Invite to</h3>
+        </div>
+      <div class="modal-body">
+        <select class="form-control">
+            <option class="checkable" ng-repeat="orga in organizations" value="{{orga.id}}">
+                {{orga.name}}
+            </option>
+        </select>
+        <label class="center">
+            <input id="makeAdmin" type="checkbox"/>
+            Make admin
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button id="inviteConfirm" type="button" class="btn btn-primary">Invite</button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -14,28 +14,19 @@ module.exports.set = function(app) {
     *	OAuth Callback
     */
 	app.get('/auth/angellist/callback', 
-		passport.authenticate('angellist', { failureRedirect: 'http://localhost:9000' }),
+		passport.authenticate('angellist', { failureRedirect: 'http://0.0.0.0:9000' }),
 		function (req, res) {
-			res.redirect('http://localhost:9000/feeds');
+			res.redirect('http://0.0.0.0:9000/?token=' + req.user.token);
 		}
 	);
 
 
 	/**
-	*	Logout
+	*	Am I logged in ? Returns user information
 	*/
-	app.post('/logout', function (req, res) {
-	    req.logout();
-	    res.writeHead(200);
-	    res.end('Logout OK');
-	});
-
-
-	/**
-	*	Am I logged in ?
-	*/
-	app.get('/me', function (req, res) {
-	    res.send(req.isAuthenticated() ? '1' : '0');
+	app.get('/me', passport.ensureAuthenticated, function (req, res) {
+		req.user.token = '';
+	    res.send(req.user);
 	});
 
 }
