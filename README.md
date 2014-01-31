@@ -22,3 +22,4 @@ $ npm install -g grunt
 $ npm install -g grunt-cli
 /client$ npm install | bower install
 start client : /client$ grunt serve
+ 
