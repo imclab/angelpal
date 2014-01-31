@@ -18,6 +18,8 @@
     "passport-local": "~0.1.6",
     "passport-angellist": "~0.1.2",
     "sequelize": "~1.7.0-rc2",
-    "ejs": "~0.8.5"
+    "ejs": "~0.8.5",
+    "nodemailer": "~0.6.0",
+    "httpreq": "~0.3.8"
   }
 }

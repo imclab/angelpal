@@ -3,7 +3,7 @@
     <div class="input-group row headerContent">
         <backbutton class="pull-left"/>
         <button ng-click="showDeleteDialog()" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-log-out"></span> Leave</button>
-        <button ng-click="showInviteContactDialog()" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-user"></span> Invite contacts</button>
+        <button ng-show="organization.isAdmin" ng-click="showInviteContactDialog()" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-user"></span> Invite contacts</button>
     </div>
 
     <div ng-show="organization">

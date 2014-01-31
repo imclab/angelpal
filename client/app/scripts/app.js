@@ -10,6 +10,8 @@ var myApp = angular.module('clientApp', [
   'CacheService'
 ]);
 
+myApp.baseUrl = "http://wo.aws.af.cm:3000/";
+
 myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
   //Enable cross domain calls
@@ -172,7 +174,7 @@ myApp.factory('AngelPalWrapper', function ($http, CacheService, $rootScope) {
 
   AngelPalWrapper.prototype.getContacts = function () {
     var cacheKey = 'contacts_page_' + this.page;
-    var url = "http://localhost:3000/users/" + this.userId + "/followers?page=" + this.page;
+    var url = myApp.baseUrl + "users/" + this.userId + "/followers?page=" + this.page;
     this.get(url, cacheKey);
   };
 
@@ -218,7 +220,7 @@ var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, UserSe
   $http.defaults.headers.common.Authorization = $cookies.angelpal_token;
 
   // Make an AJAX call to check if the user is logged in
-  $http.get('http://localhost:3000/me')
+  $http.get(myApp.baseUrl + 'me')
   .success(function (user) { // Authenticated
     UserService.login(user);
     $rootScope.angellist_id = user.angellist_id;

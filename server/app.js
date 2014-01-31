@@ -34,6 +34,11 @@ app.configure(function () {
     app.use(app.router);
 });
 
+app.configure('production', function(){
+    var env = JSON.parse(process.env.VCAP_SERVICES);
+    config.db = env['mysql-5.1'][0]['credentials'];
+});
+
 // setup models
 app.set('models', require('./models'));
 
@@ -46,16 +51,9 @@ passport.use(new AngelListStrategy({
     clientID: "2453f00f021a59cf21f247862645af45",
     clientSecret: "e72b18b0210117916f987655212f5e5f",
     callbackURL: "http://127.0.0.1:3000/auth/angellist/callback"
-  },
-    function (accessToken, refreshToken, profile, done) {
+  }, function (accessToken, refreshToken, profile, done) {
         var User = app.get('models').User;
-        User.findOrCreate({angellist_id: profile.id}, {angellist_id: profile.id, name: profile.displayName, email: profile._json.email, token: accessToken})
-            .success(function (user, created) {
-                return done(false, user);
-            })
-            .error(function (error) {
-                return done(error, false);
-            });
+        User.login(profile, accessToken, done);
     }
 ));
 passport.serializeUser(function (user, done) {
@@ -67,5 +65,4 @@ passport.deserializeUser(function (user, done) {
 
 // start server
 app.listen(config.server.port);
-
 console.log('Server started on port: '.green + config.server.port);

@@ -1,11 +1,14 @@
 "use strict";
-var passport = require('passport');
+var passport = require('passport'), 
+	email = require('../libs/email.js'),
+	httpreq = require('httpreq');
 
 module.exports.set = function(app) {
 
 	var Organization = app.get('models').Organization,
+		Invitation = app.get('models').Invitation,
 		User = app.get('models').User;
-    
+
 
 	 /**
 	 *	Get all my organizations
@@ -18,6 +21,32 @@ module.exports.set = function(app) {
 			
 			// get user's organizations
 			user.getOrganizations()
+			.success(function (organizations) {
+				res.send(organizations);
+			})
+			.error(function (error) {
+				res.writeHead(500);
+				res.end('Server error');
+			});
+		})
+		.error(function (error) {
+			res.writeHead(500);
+			res.end('Server error');
+		});
+	});
+
+
+	/**
+	 *	Get my organizations where I am admin
+	 */
+	app.get('/organizationsAdmin', passport.ensureAuthenticated, function (req, res) {
+		// get user
+		User.find({ where: {angellist_id: req.user.angellist_id} })
+		.success(function (user) {
+			if (user == null) { res.send('User not found');return; }
+			
+			// get user's organizations
+			user.getOrganizations({ where: {role: 10}})
 			.success(function (organizations) {
 				res.send(organizations);
 			})
@@ -86,14 +115,18 @@ module.exports.set = function(app) {
 			.success(function (organizations) {
 				if (organizations == null) { res.writeHead(400);res.end('Organization not found');return; }
 				if (organizations.length > 0) {
+					organizations[0].dataValues.isAdmin = false;
 					organizations[0].getUsers()
 					.success(function (users) {
 						// add user's role
 						for (var i in users) {
+							if (users[i].id == req.user.id && users[i].UserRoles.role == 10) {
+								organizations[0].dataValues.isAdmin = true;
+							}
 							users[i].token = '';
 							users[i].dataValues.role = users[i].UserRoles.role;
 						}
-						organizations[0].dataValues.members	 = users;
+						organizations[0].dataValues.members	= users;
 						res.send(organizations[0]);
 					})
 					.error(function (error) {
@@ -137,20 +170,49 @@ module.exports.set = function(app) {
 			organization.getUsers({where: {userId: req.user.id, role: 10}})
 			.success(function (users) {
 				if (users.length > 0) {
+					var requestOwner = users[0];
 					// get invitee user
-					User.find({ where: {id: req.params.userId}})
+					User.find({ where: {angellist_id: req.params.userId}})
 					.success(function (invitee) {
-						if (invitee == null) { res.writeHead(400);res.end('User not found');return; }
-
-						// add user to organization
-						organization.addUser(invitee, {role: postData.role})
-						.success(function () {
-							res.send('OK');
-						})
-						.error(function (error) {
-							res.writeHead(500);
-							res.end('Server error');
-						});
+						if (invitee == null) { 
+							// invite contact to AngelPal
+							httpreq.post('https://api.angel.co/1/messages', {
+								parameters: {
+									recipient_id: req.params.userId,
+									body: email.prepareMail(null, email.templates.inviteToOrganization, [organization.name]).text,
+									access_token: req.user.token	
+								}
+							}, function (err, result) {
+								if (err) {
+									res.writeHead(500);
+									res.end('Server error');
+								} else {
+									// add pending invitations to table
+									Invitation.create({ 
+										organization_id: organization.id, 
+										angellist_id: req.params.userId,
+										role: postData.role
+									})
+									.success(function (newInvitation) {
+										res.send('Ok');
+									})
+									.error(function (error) {
+										res.writeHead(500);
+										res.end('Server error');
+									});
+								}
+							});
+						} else {
+							// add user to organization
+							organization.addUser(invitee, {role: postData.role})
+							.success(function () {
+								res.send('OK');
+							})
+							.error(function (error) {
+								res.writeHead(500);
+								res.end('Server error');
+							});
+						}
 					})
 					.error(function (error) {
 						res.writeHead(500);

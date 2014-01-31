@@ -23,7 +23,7 @@ myApp.controller('ContactDetailsCtrl', function ($scope, $routeParams, $http, Ca
     }
 
     $scope.showInviteDialog = function () {
-    	var url = "http://localhost:3000/organizations";
+    	var url = myApp.baseUrl + "organizationsAdmin";
 	    $http.get(url).success(function (organizations) {
 	    	$scope.organizations = organizations;
 	    }.bind(this));
@@ -32,14 +32,19 @@ myApp.controller('ContactDetailsCtrl', function ($scope, $routeParams, $http, Ca
 
 
 	$('#inviteConfirm').click(function () {
-	  	$http.defaults.headers.common.Authorization = $cookies.angelpal_token;
-		var url = "http://localhost:3000/organizations/" + $('select', '#inviteModal').val() + '/users/' + contactId;
-	    $http.post(url, {role: $('#makeAdmin', '#inviteModal').is(':checked') ? 10 : 0})
-	    .success(function (data) {
-			$('#inviteModal').modal('hide');
-	    }).error(function(data, status) {
-	    	$('#inviteModal').modal('hide');
-		});
+		if ($('select', '#inviteModal').val() >= 0) {
+			$('.loadingRequest', '#inviteModal').removeClass('hide');
+		  	$http.defaults.headers.common.Authorization = $cookies.angelpal_token;
+			var url = myApp.baseUrl + "organizations/" + $('select', '#inviteModal').val() + '/users/' + contactId;
+		    $http.post(url, {role: $('#makeAdmin', '#inviteModal').is(':checked') ? 10 : 0})
+		    .success(function (data) {
+		    	$('.loadingRequest', '#inviteModal').addClass('hide');
+				$('#inviteModal').modal('hide');
+		    }).error(function(data, status) {
+		    	$('.loadingRequest', '#inviteModal').addClass('hide');
+		    	$('#inviteModal').modal('hide');
+			});
+		}
 	});
 
 });

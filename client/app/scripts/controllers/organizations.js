@@ -5,7 +5,7 @@ angular.module('clientApp')
   	SideMenu.showMenuLogin();
 	SideMenu.updateActive(4);
 
-	var url = "http://localhost:3000/organizations";
+	var url = myApp.baseUrl + "organizations";
     $http.get(url).success(function (organizations) {
     	$scope.dataLoaded = true;
     	$scope.organizations = organizations;

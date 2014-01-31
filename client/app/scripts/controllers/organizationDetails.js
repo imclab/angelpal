@@ -8,7 +8,7 @@ myApp.controller('OrganizationDetailsCtrl', function ($scope, $routeParams, $htt
 
 	var organizationId = $routeParams.organizationId;
 
-	var url = "http://localhost:3000/organizations/";
+	var url = myApp.baseUrl + "organizations/";
     $http.get(url + organizationId).success(function (organization) {
     	$scope.organization = organization;
     }.bind(this));
@@ -23,7 +23,7 @@ myApp.controller('OrganizationDetailsCtrl', function ($scope, $routeParams, $htt
 
 	$scope.leaveOrganization = function () {
 		$('#deleteModal').modal('hide');
-    	var url = "http://localhost:3000/organizations/" + organizationId + "/users/" + UserService.user.id + "/leave";
+    	var url = myApp.baseUrl + "organizations/" + organizationId + "/users/" + UserService.user.id + "/leave";
 		$http.post(url)
 	    .success(function (data) {
 			$location.path('/organizations');
