@@ -37,6 +37,7 @@ app.configure(function () {
 app.configure('production', function(){
     var env = JSON.parse(process.env.VCAP_SERVICES);
     config.db = env['mysql-5.1'][0]['credentials'];
+    config.server.port = 80;
 });
 
 // setup models
@@ -50,7 +51,7 @@ controllers.set(app);
 passport.use(new AngelListStrategy({
     clientID: "2453f00f021a59cf21f247862645af45",
     clientSecret: "e72b18b0210117916f987655212f5e5f",
-    callbackURL: "http://127.0.0.1:3000/auth/angellist/callback"
+    callbackURL: "http://localhost:" + config.server.port + "/auth/angellist/callback"
   }, function (accessToken, refreshToken, profile, done) {
         var User = app.get('models').User;
         User.login(profile, accessToken, done);

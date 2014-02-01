@@ -6,7 +6,8 @@ var Sequelize = require('sequelize'),
 console.log(config.db)
 var sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, {
     dialect: "mysql",
-    port:    3306
+    port:    3306,
+    host: 'localhost'
 });
 sequelize  
 .authenticate()
