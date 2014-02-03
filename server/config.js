@@ -24,6 +24,11 @@ module.exports = {
 		baseUrl: 'http://0.0.0.0:9000',
 		loginFailedUrl: 'http://0.0.0.0:9000',
 		loginSuccessUrl: 'http://0.0.0.0:9000?token='
+	},
+
+	angellist: {
+		clientID: '2453f00f021a59cf21f247862645af45',
+		clientSecret: 'e72b18b0210117916f987655212f5e5f'
 	}
 
 };

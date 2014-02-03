@@ -15,8 +15,8 @@ module.exports = {
 		// configure authentication strategy with Angellist
 		passport.use(new AngelListStrategy(
 		{
-		    clientID: "2453f00f021a59cf21f247862645af45",
-		    clientSecret: "e72b18b0210117916f987655212f5e5f",
+		    clientID: config.angellist.clientID,
+		    clientSecret: config.angellist.clientSecret,
 		    callbackURL: "http://localhost:" + config.server.port + "/auth/angellist/callback"
 	 	}, 	function (accessToken, refreshToken, profile, done) {
 		        User.login(profile, accessToken, done);
