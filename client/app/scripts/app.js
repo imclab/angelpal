@@ -129,7 +129,7 @@ angular.module('CacheService', ['ng'])
     return $cacheFactory('CacheService');
 });
 
-myApp.factory('SideMenu', function (UserService) {
+myApp.factory('SideMenu', function () {
   return {
     showMenuLogout: function () {
       $('li', '.nav').addClass('hide');
@@ -140,7 +140,6 @@ myApp.factory('SideMenu', function (UserService) {
       $('li:nth-child(7)', '.nav').removeClass('hide');
       $('#loginButton').removeClass('hide');
       this.updateActive(1);
-      // $('#loginName').html('').addClass('hide');
     },
     showMenuLogin: function () {
       $('li', '.nav').removeClass('hide');
@@ -150,7 +149,6 @@ myApp.factory('SideMenu', function (UserService) {
       $('li:nth-child(1)', '.nav').addClass('hide');
       $('#loginButton').addClass('hide');
       this.updateActive(2);
-      // $('#loginName').html('Logged in as ' + UserService.name).removeClass('hide');
     },
     updateActive: function (index) { 
       $('li', '.nav').removeClass('active');

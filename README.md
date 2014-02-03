@@ -15,6 +15,7 @@ SERVER
 /server$ npm install
 <br>
 start server : /server$ node server.js
+launch unit test : /server$ npm test
 
 CLIENT
 ======

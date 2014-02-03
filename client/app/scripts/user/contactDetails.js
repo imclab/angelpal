@@ -23,6 +23,7 @@ myApp.controller('ContactDetailsCtrl', function ($scope, $routeParams, $http, Ca
     }
 
     $scope.showInviteDialog = function () {
+    	console.log('ici')
     	var url = myApp.baseUrl + "organizationsAdmin";
 	    $http.get(url).success(function (organizations) {
 	    	$scope.organizations = organizations;

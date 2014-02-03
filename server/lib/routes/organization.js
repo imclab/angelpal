@@ -72,13 +72,12 @@ module.exports.init = function(app, config, security, errors) {
 		User.find({ where: {angellist_id: req.user.angellist_id} })
 		.success(function (user) {
 			if (user == null) { return next(new errors.BadRequest('User not found')); }
-
 			Organization.create({ name: postData.name })
 			.success(function (newOrganization) {
 				// add new organization
 				user.addOrganization(newOrganization, {role: 10})
 				.success(function () {
-					res.send('OK');
+					res.send(200);
 				})
 				.error(function (error) {
 					return next(new errors.Error('Server error'));
