@@ -10,13 +10,12 @@ var myApp = angular.module('clientApp', [
   'CacheService'
 ]);
 
-myApp.baseUrl = "http://wo.aws.af.cm:3000/";
+myApp.baseUrl = "http://localhost:3000/";
 
 myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
   //Enable cross domain calls
   $httpProvider.defaults.useXDomain = true;
-  $httpProvider.defaults.withCredentials = true;
 
   //Remove the header used to identify ajax call  that would prevent CORS from working
   delete $httpProvider.defaults.headers.common['X-Requested-With'];
