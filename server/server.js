@@ -54,7 +54,7 @@ controllers.set(app);
 passport.use(new AngelListStrategy({
     clientID: "2453f00f021a59cf21f247862645af45",
     clientSecret: "e72b18b0210117916f987655212f5e5f",
-    callbackURL: "http://localhost:" + config.server.port + "/auth/angellist/callback"
+    callbackURL: "http://127.0.0.1:3000/auth/angellist/callback"
   }, function (accessToken, refreshToken, profile, done) {
         var User = app.get('models').User;
         User.login(profile, accessToken, done);

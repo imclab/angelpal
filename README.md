@@ -14,7 +14,7 @@ SERVER
 ======
 /server$ npm install
 <br>
-start server : /server$ node app.js
+start server : /server$ node server.js
 
 CLIENT
 ======

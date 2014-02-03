@@ -1,18 +1,21 @@
 "use strict";
+module.exports = {
 
-exports.server = {
-    port : 3000
-};
+	server: {
+	    port : 3000
+	},
 
-exports.db = {
-    name : 'angelpal',
-    host : 'localhost',
-    user :   'root',
-    password:  'root'
-};
+	db: {
+	    name : 'angelpal',
+	    host : 'localhost',
+	    user : 'root',
+	    password: 'root'
+	},
 
-exports.smtp = {
-	service: "Gmail",
-	user: "giggs.apps@gmail.com",
-	pass: "putain666"
+	smtp: {
+		service: "Gmail",
+		user: "giggs.apps@gmail.com",
+		pass: "putain666"
+	}
+
 };

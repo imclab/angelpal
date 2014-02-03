@@ -3,7 +3,6 @@ var Sequelize = require('sequelize'),
     config = require('../config');
 
 // init Sequelize db connection
-console.log(config.db)
 var sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, {
     dialect: "mysql",
     port:    3306
