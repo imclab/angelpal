@@ -70,25 +70,57 @@ myApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
       redirectTo: '/'
     });
 
-    $httpProvider.responseInterceptors.push(function ($q, $location, $cookies) {
-      return function (promise) {
-        return promise.then(
-          // Success: just return the response
-          function (response) {
+    var interceptor = ['$rootScope', '$q', '$cookies', '$location', function (scope, $q, $cookies, $location) {
+
+      function success(response) {
             return response;
-          }, // Error: check the error status to get only the 401
-          function (response) {
-            if (response.status === 401) {
-              $cookies.angelpal_token = '';
-              $location.url('/');
+      }
+
+      function error(response) {
+            var status = response.status;
+            if (status == 401) {
+                $cookies.angelpal_token = '';
+                $location.url('/');
+                return;
             }
             return $q.reject(response);
-          } 
-        ); 
-      } 
-    });
+      }
+
+      return function (promise) {
+          return promise.then(success, error);
+      }
+
+  }];
+  $httpProvider.responseInterceptors.push(interceptor);
 
 });
+
+var checkLoggedin = { func: ['$q', '$timeout', '$http', '$location', '$rootScope', 'UserService', '$cookies', function ($q, $timeout, $http, $location, $rootScope, UserService, $cookies) {
+
+      // Initialize a new promise v
+      var deferred = $q.defer();
+
+      $http.defaults.headers.common.Authorization = $cookies.angelpal_token;
+
+      // Make an AJAX call to check if the user is logged in
+      $http.get(myApp.baseUrl + 'me')
+      .success(function (user) { // Authenticated
+        UserService.login(user);
+        $rootScope.angellist_id = user.angellist_id;
+        $timeout(deferred.resolve, 0); 
+      }).error(function (error) {
+        UserService.logout();
+        $timeout(function(){deferred.reject();}, 0);
+      });
+    }
+    
+]};
+
+
+// 
+//     
+//     }
+// ]};
 
 // init drawer
 myApp.config(function (snapRemoteProvider) {
@@ -209,21 +241,3 @@ myApp.factory('UserService', function ($cookies) {
 
     return UserService;
 });
-
-var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, UserService, $cookies) {
-  // Initialize a new promise v
-  var deferred = $q.defer();
-
-  $http.defaults.headers.common.Authorization = $cookies.angelpal_token;
-
-  // Make an AJAX call to check if the user is logged in
-  $http.get(myApp.baseUrl + 'me')
-  .success(function (user) { // Authenticated
-    UserService.login(user);
-    $rootScope.angellist_id = user.angellist_id;
-    $timeout(deferred.resolve, 0); 
-  }).error(function (error) {
-    UserService.logout();
-    $timeout(function(){deferred.reject();}, 0);
-  });
-};

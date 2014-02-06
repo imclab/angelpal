@@ -35,11 +35,11 @@ module.exports = {
 	},
 
 	authenticationCallback: function () {
-		return passport.authenticate('angellist', { failureRedirect: config.client.loginFailedUrl });
+		return passport.authenticate('angellist', { failureRedirect: config.client.loginFailedUrl + config.client.port });
 	},
 
 	authenticationSuccessful: function (req, res) {
-		res.redirect(config.client.loginSuccessUrl + req.user.token);
+		res.redirect(config.client.loginSuccessUrl + config.client.port + '?token=' + req.user.token);
 	},
 
 	authenticationRequired: function (req, res, next) {

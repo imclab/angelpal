@@ -8,7 +8,8 @@ var errors = require('./lib/errors');
 
 // enable CORS
 var enableCORS = function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://0.0.0.0:9000');
+    res.setHeader('Access-Control-Allow-Origin', config.client.baseUrl + config.server.port);
+    res.setHeader('Access-Control-Allow-Origin', config.client.baseUrl + config.client.port);
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
     next();
@@ -27,11 +28,6 @@ app.configure(function () {
 
 // production variables
 app.configure('production', function () {
-    // AppFog
-    var env = JSON.parse(process.env.VCAP_SERVICES);
-    config.db = env['mysql-5.1'][0]['credentials'];
-    
-    config.server.port = 80;
 });
 
 // setup models
