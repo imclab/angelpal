@@ -33,7 +33,7 @@ myApp.controller('OrganizationDetailsCtrl', function ($scope, $routeParams, $htt
 	};
 
 	$scope.showInviteContactDialog = function () {
-
+		console.log('TODO')
 	};
 
 });
