@@ -13,23 +13,15 @@ module.exports.init = function(app, config, security, errors) {
 	 *	Get all my organizations
 	 */
 	app.get('/organizations', security.authenticationRequired, function (req, res, next) {
-		// get user
-		User.find({ where: {angellist_id: req.user.angellist_id} })
-		.success(function (user) {
-			if (user == null) { return next(new errors.BadRequest('User not found')); }
-			
-			// get user's organizations
-			user.getOrganizations()
-			.success(function (organizations) {
-				res.send(organizations);
+		// get user's organizations
+		User.find({ where: {angellist_id: req.user.angellist_id}, include: [Organization] })
+			.success(function (user) {
+				if (user == null) { return next(new errors.BadRequest('User not found')); }
+				res.send(user.organizations);
 			})
 			.error(function (error) {
-				return next(new errors.Error('Server error'));
+				return next(new errors.Error(error, 'Server error'));
 			});
-		})
-		.error(function (error) {
-			return next(new errors.Error('Server error'));
-		});
 	});
 
 
@@ -37,23 +29,23 @@ module.exports.init = function(app, config, security, errors) {
 	 *	Get my organizations where I am admin
 	 */
 	app.get('/organizationsAdmin', security.authenticationRequired, function (req, res, next) {
-		// get user
+		/// get user
 		User.find({ where: {angellist_id: req.user.angellist_id} })
-		.success(function (user) {
-			if (user == null) { return next(new errors.BadRequest('User not found')); }
-			
-			// get user's organizations
-			user.getOrganizations({ where: {role: 10}})
-			.success(function (organizations) {
-				res.send(organizations);
+			.success(function (user) {
+				if (user == null) { return next(new errors.BadRequest('User not found')); }
+
+				// get user's organizations
+				user.getOrganizations({ where: {role: 10}})
+				.success(function (organizations) {
+					res.send(organizations);
+				})
+				.error(function (error) {
+					return next(new errors.Error(error, 'Server error'));
+				});
 			})
 			.error(function (error) {
-				return next(new errors.Error('Server error'));
+				return next(new errors.Error(error, 'Server error'));
 			});
-		})
-		.error(function (error) {
-			return next(new errors.Error('Server error'));
-		});
 	});
 
 
@@ -80,15 +72,15 @@ module.exports.init = function(app, config, security, errors) {
 					res.send(200);
 				})
 				.error(function (error) {
-					return next(new errors.Error('Server error'));
+					return next(new errors.Error(error, 'Server error'));
 				});
 			})
 			.error(function (error) {
-				return next(new errors.Error('Server error'));
+				return next(new errors.Error(error, 'Server error'));
 			});
 		})
 		.error(function (error) {
-			return next(new errors.Error('Server error'));
+			return next(new errors.Error(error, 'Server error'));
 		});
 	});
 
@@ -123,16 +115,16 @@ module.exports.init = function(app, config, security, errors) {
 						res.send(organizations[0]);
 					})
 					.error(function (error) {
-						return next(new errors.Error('Server error'));
+						return next(new errors.Error(error, 'Server error'));
 					});
 				}
 			})
 			.error(function (error) {
-				return next(new errors.Error('Server error'));
+				return next(new errors.Error(error, 'Server error'));
 			});
 		})
 		.error(function (error) {
-			return next(new errors.Error('Server error'));
+			return next(new errors.Error(error, 'Server error'));
 		});
 	});
 
@@ -171,7 +163,7 @@ module.exports.init = function(app, config, security, errors) {
 								}
 							}, function (err, result) {
 								if (err) {
-									return next(new errors.Error('Server error'));
+									return next(new errors.Error(error, 'Server error'));
 								} else {
 									// add pending invitations to table
 									Invitation.create({ 
@@ -183,7 +175,7 @@ module.exports.init = function(app, config, security, errors) {
 										res.send(200);
 									})
 									.error(function (error) {
-										return next(new errors.Error('Server error'));
+										return next(new errors.Error(error, 'Server error'));
 									});
 								}
 							});
@@ -194,23 +186,23 @@ module.exports.init = function(app, config, security, errors) {
 								res.send(200);
 							})
 							.error(function (error) {
-								return next(new errors.Error('Server error'));
+								return next(new errors.Error(error, 'Server error'));
 							});
 						}
 					})
 					.error(function (error) {
-						return next(new errors.Error('Server error'));
+						return next(new errors.Error(error, 'Server error'));
 					});
 				} else {
 					return next(new errors.Unauthorized('User is not an admin'));
 				}
 			})
 			.error(function (error) {
-				return next(new errors.Error('Server error'));
+				return next(new errors.Error(error, 'Server error'));
 			});
 		})
 		.error(function (error) {
-			return next(new errors.Error('Server error'));
+			return next(new errors.Error(error, 'Server error'));
 		});
 	});
 
@@ -247,18 +239,18 @@ module.exports.init = function(app, config, security, errors) {
 						}
 					})
 					.error(function (error) {
-						return next(new errors.Error('Server error'));
+						return next(new errors.Error(error, 'Server error'));
 					});
 				} else {
 					return next(new errors.Unauthorized('User is not an admin'));
 				}
 			})
 			.error(function (error) {
-				return next(new errors.Error('Server error'));
+				return next(new errors.Error(error, 'Server error'));
 			});
 		})
 		.error(function (error) {
-			return next(new errors.Error('Server error'));
+			return next(new errors.Error(error, 'Server error'));
 		});
 	});
 

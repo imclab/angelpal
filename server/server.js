@@ -27,10 +27,6 @@ app.configure(function () {
 
 // production variables
 app.configure('production', function () {
-    // AppFog
-    var env = JSON.parse(process.env.VCAP_SERVICES);
-    config.db = env['mysql-5.1'][0]['credentials'];
-    
     config.server.port = 80;
 });
 

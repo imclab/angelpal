@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     User.sync();
-    
+
 
     User.login = function (profile, accessToken, callback) {
         // find or create AngelPal account
