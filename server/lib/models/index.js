@@ -1,10 +1,12 @@
 "use strict";
-var db = require('../initDB');
 
-// load models
-var models = [
-    'User', 'Organization', 'Invitation'
-];
-models.forEach(function (model) {
-    module.exports[model] = db.import(__dirname + '/' + model);
-});
+module.exports.init = function(db) {
+
+	// load models
+	var models = ['User', 'Company', 'Process', 'Message', 'Document', 'Comment'];
+
+	models.forEach(function (model) {
+	    module.exports[model] = db.import(__dirname + '/' + model);
+	});
+
+};

@@ -1,15 +1,17 @@
 "use strict";
-var authentication = require('./authentication.js');
-var organization = require('./organization.js');
 
-module.exports.init = function(app, config, security, errors) {
+module.exports.init = function (app) {
 
 	// serve app
 	app.get('/', function (req, res, next) {
 	    res.send('Server is running !');
 	});
 
-	authentication.init(app, config, security, errors);
-	organization.init(app, config, security, errors);
+	// init routes
+	var routes = ['authentication', 'jams', 'users', 'comments', 'likes', 'videos'];
+
+	for (var i = 0; i < routes.length; i++) {
+		require('./' + routes[i] + '.js').init(app);
+	}
 
 }

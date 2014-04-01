@@ -19,11 +19,11 @@ module.exports = {
 	*	Mail Templates
 	*/ 
 	templates: {
-		inviteToOrganization: {
-			subject: "Hey ! $s0 invites you to AngelPal",
-		    text: "Hi !\n I have invited you to my AngelPal organization $s0.\nhttp://localhost:9000",
-		    html: "<h2>Hi !</h2> I have invited you to my AngelPal organization <b><a href=\"http://localhost:9000\" target=\"_blank\">$s0</a></b>."
-		}
+		// inviteToOrganization: {
+		// 	subject: "Hey ! $s0 invites you to AngelPal",
+		//     text: "Hi !\n I have invited you to my AngelPal organization $s0.\nhttp://localhost:9000",
+		//     html: "<h2>Hi !</h2> I have invited you to my AngelPal organization <b><a href=\"http://localhost:9000\" target=\"_blank\">$s0</a></b>."
+		// }
 	},
 
 
@@ -38,7 +38,7 @@ module.exports = {
 		}
 
 		var mailOptions = {
-			from: "AngelPal <giggs.apps@gmail.com>",
+			from: config.smtp.senderName + "<" + config.smtp.user + ">",
 		    to: to, // list of receivers
 		    subject: template.subject,
 		    text: template.text, // plaintext body

@@ -36,6 +36,10 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
-public/
+./public/
+uploads/*
+!uploads/videos
+uploads/videos/*
+!uploads/videos/100.webm
 node_modules/
 config.js

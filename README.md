@@ -1,23 +1,25 @@
-angelpal
+Angelpal
 ========
 
-HOW TO INSTALL
+Stuff to install
 ============
 
 install nodejs, npm, mysql-server
 
-DATABASE
+Database
 ========
-Create database : angelpal
-
-SERVER
-======
-/server$ npm install
+create database: mysql > CREATE DATABASE angelpal;
 <br>
-start server : /server$ node server.js
-launch unit test : /server$ npm test
+mysql > USE htmljam;
 
-CLIENT
+
+Server
+======
+angelpal/server$ npm install
+<br>
+start server : angelpal/server$ node app.js
+
+Client
 ======
 $ npm install -g bower
 <br>
@@ -25,7 +27,7 @@ $ npm install -g grunt
 <br>
 $ npm install -g grunt-cli
 <br>
-/client$ npm install | bower install
+angelpal/client$ npm install | bower install
 <br>
-start client : /client$ grunt serve
+start client : angelpal/client$ grunt serve
  

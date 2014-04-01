@@ -1,25 +1,32 @@
 {
-  "name": "angelpal_server",
-  "description": "RESTful Web Service for AngelPal Application",
+  "name": "angelpal-server",
+  "description": "RESTful Web Service for angelpal app",
   "version": "0.0.1",
-  "scripts": {
-    "test": "vows test/*.js"
-  },
   "private": true,
   "dependencies": {
     "connect": "*",
     "mysql": "*",
-    "vows": "*",
     "colors": "*",
-    "api-easy": "*",
     "express": "~3.4.8",
     "passport": "~0.1.18",
     "passport-http-bearer": "~1.0.1",
     "passport-local": "~0.1.6",
-    "passport-angellist": "~0.1.2",
+    "passport-angellist": "latest",
     "sequelize": "~1.7.0-rc2",
     "ejs": "~0.8.5",
     "nodemailer": "~0.6.0",
-    "httpreq": "~0.3.8"
+    "httpreq": "~0.3.8",
+    "grunt": "latest",
+    "grunt-cli": "latest"
+  },
+  "devDependencies": {
+        "grunt-contrib-compass": "~0.5.0",
+        "grunt-contrib-watch": "latest",
+        "grunt-contrib-jshint": "latest",
+        "grunt-nodemon": "latest",
+        "grunt-concurrent": "latest",
+        "grunt-mocha-test": "latest",
+        "load-grunt-tasks": "~0.1.0",
+        "time-grunt": "~0.1.1"
   }
 }

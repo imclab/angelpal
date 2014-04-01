@@ -16,74 +16,24 @@
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/sass-bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/angular-snap/angular-snap.css" />
-    <link rel="stylesheet" href="bower_components/angular-snap/angular-snap.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:css({.tmp,app}) styles/main.css -->
-    <link rel="stylesheet" href="/styles/main.css">
-    <link rel="stylesheet" href="/styles/login.css">
-    <link rel="stylesheet" href="/styles/contacts.css">
-    <link rel="stylesheet" href="/styles/processes.css">
-    <link rel="stylesheet" href="/styles/organizations.css">
-    <link rel="stylesheet" href="/styles/feeds.css">
-    <link rel="stylesheet" href="/styles/settings.css">
+    <link rel="stylesheet" href="/styles/main.scss">
     <!-- endbuild -->
-
-    <!-- Google Fonts -->
-    <link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,700,400italic' rel='stylesheet' type='text/css'>
-  
-    <base href="/" />
-  
   </head>
-  <body ng-app="clientApp">
+
+  <body ng-app="angelpal">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <!-- LEFT DRAWER -->
-    <snap-drawer class="hide">
-      <div class="panel panel-default">
-        <div class="panel-heading text-center visible-xs">
-          <strong>Menu</strong>
-        </div>
-        <div class="panel-body">
-           <ul class="nav nav-pills nav-stacked">
-            <li class="active">
-              <a href="/"><span class="glyphicon glyphicon-home"></span>Home</a>
-            </li>
-            <li class="hide">
-              <a href="/feeds"><span class="glyphicon glyphicon-comment"></span>Feeds</a>
-            </li>
-            <li class="hide"><a href="/processes"><span class="glyphicon glyphicon-tasks"></span>Processes</a></li>
-            <li class="hide"><a href="/organizations"><span class="glyphicon glyphicon-briefcase"></span>Organizations</a></li>
-            <li class="hide"><a href="/contacts"><span class="glyphicon glyphicon-user"></span>Contacts</a></li>
-            <hr class="hide"/>
-            <li><a id="menuSettings" href="/settings"><span class="glyphicon glyphicon-info-sign"></span><span class="menuLabel">About</span></a></li>
-            <li class="hide"><a href="/?logout=true"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
-          </ul>
-        </div>
-      </div>
-    </snap-drawer>
-
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="navbar-inner">
-        <button id="menuButton" type="button" class="btn btn-default navbar-btn navbar-left visible-xs" snap-toggle="left">
-          <span class="glyphicon glyphicon-align-justify"></span>
-        </button>
-        <div class="navbar-brand">AngelPal</div>
-        <a id="loginButton" class="btn btn-default navbar-btn pull-right" href="http://127.0.0.1:3000/auth/angellist">Log In</a>
-        <div id="loginName" class="navbar-text pull-right hide"></div>
-      </div>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <snap-content>
-      <!-- Add your site or application content here -->
-      <div class="container" ng-view=""></div>
-    </snap-content>
-
+    <!-- Nav bar -->
+    <div ng-include="'templates/topbar.html'"></div>
+    
+    <!-- Application content -->
+    <div class="container" ng-view=""></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -106,31 +56,28 @@
     <script src="bower_components/modernizr/modernizr.js"></script>
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/sass-bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/snapjs/snap.js"></script>
-    <script src="bower_components/angular-snap/angular-snap.js"></script>
-    <script src="bower_components/angular-snap/angular-snap.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/sass-bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/fastclick/lib/fastclick.js"></script>
     <script src="bower_components/ngInfiniteScroll/ng-infinite-scroll.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
-
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <!-- Application Init -->
     <script src="scripts/app.js"></script>
-    <script src="scripts/user/login.js"></script>
-    <script src="scripts/feeds/feeds.js"></script>
-    <script src="scripts/process/processes.js"></script>
-    <script src="scripts/user/contacts.js"></script>
-    <script src="scripts/organization/organizations.js"></script>
-    <script src="scripts/organization/organizationDetails.js"></script>
-    <script src="scripts/settings/settings.js"></script>
-    <script src="scripts/user/contactDetails.js"></script>
-    <script src="scripts/process/processDetails.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/directives.js"></script>
+    <script src="scripts/filters.js"></script>
+
+    <!-- Application Services -->
+
+    <!-- Application Controllers -->
+    <script src="scripts/init.js"></script>
     <!-- endbuild -->
 
 </body>
